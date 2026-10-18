@@ -1,54 +1,54 @@
-# Görsel ve davranışsal kontrol
+# Visual and behavioral review
 
-Kontrolleri istenen teslimata göre seç. Analiz veya prompt çıktısında uygulama testleri yapıldığını iddia etme.
+Choose checks appropriate to the deliverable. Do not claim application tests for an analysis-only or prompt-only task.
 
-## Referans belleği kontrolü
+## Reference memory
 
-- Yeni verilen tüm tasarım referansları kayda geçti mi; analiz durumları ve eksikler doğru mu?
-- Aynı URL ikinci kayıt açmadan güncellendi mi ve önceki analiz korunuyor mu?
-- Yeni link verilmemiş üretim talebinde bellek gerçekten arandı ve seçilen kayıtların ayrıntıları okundu mu?
-- Kaydetme/senkronizasyon başarılı mı; örnek veya test kayıtları gerçek belleğe karıştı mı?
-- Yalnızca referans ekleme talebi yanlışlıkla site üretimine dönüştü mü?
+- Did every new design-reference URL receive a record with an accurate inspection status and limitations?
+- Did repeated URLs update existing records while preserving history?
+- For a build without new links, was memory searched and were selected details read?
+- Did durable saving succeed, and were example/test records kept out of real memory?
+- Did an intake-only request remain within intake scope?
 
-## Önce isteğe uyum
+## Brief compliance
 
-- Kullanıcının tema, renk, kapsam, içerik, framework ve bileşen tercihleri uygulanmış mı?
-- Kullanıcı A'dan tipografi, B'den kart istediyse tasarım bu rolleri koruyor mu?
-- Kendi yorumların açık isteklerin önüne geçmiş mi?
-- İncelenmeyen kaynak veya durumlar doğrulanmış gibi sunulmuş mu?
+- Are required theme, colors, scope, content, stack, and components respected?
+- Are the user's assigned reference roles preserved?
+- Did personal design interpretation override an explicit instruction?
+- Are uninspected sources or states being presented as verified?
 
-## Teknik inceleme kapsamı
+## Technical inspection coverage
 
-- URL/kod sağlandıysa DOM/HTML, stil kuralları ve ilgili davranış kodu incelenmiş mi; erişilemeyen katmanlar açık mı?
-- Önemli özellikler öğe/seçici/dosya ve ilgili kurala bağlanabiliyor mu?
-- Tanımlı CSS kuralı ile runtime'da uygulanan değer ayrılmış mı; media query hangi genişlik/durum için geçerli?
-- Efektin gerçek katmanı ve mekanizması bulunmuş mu; yalnızca görünüşten CSS tekniği ilan edilmiş mi?
-- Kaynak repo olmadan özgün dosya ağacı, framework bileşen mimarisi veya sunucu kodu hakkında kesin iddia var mı?
-- Teknik bulgular hedef projenin yapısına uygulanabilir kararlara dönüşmüş mü?
+- For URLs/code, were DOM/HTML, relevant styles, and behavior code inspected or access limitations stated?
+- Can important features be traced to an element/selector/file and rule?
+- Are declared CSS and applied runtime values distinguished, including viewport/state conditions?
+- Was the actual effect layer/mechanism found rather than inferred from appearance alone?
+- Are original source architecture or server-code claims unsupported by repository access?
+- Did findings become actionable choices for the target project?
 
-## Sonra görsel karşılaştırma
+## Visual comparison
 
-1. Kompozisyon: hizalar, ana blokların oranları, içerik genişliği ve bölüm ritmi.
-2. Tipografi: başlık/gövde ilişkisi, kalınlık, satır uzunluğu ve metin sarması.
-3. Yoğunluk: boşluklar, kart içi padding, satır araları ve tekrar eden öğeler.
-4. Yüzey: renk rolleri, kenarlıklar, köşeler, gölgeler, doku ve katmanlar.
-5. Detay: ikonlar, görsel kırpma, düğme durumları ve istenen hareketler.
+1. Composition: alignment, block proportions, content width, section rhythm.
+2. Typography: heading/body relationship, weight, measure, wrapping.
+3. Density: spacing, card padding, line spacing, repeated content.
+4. Surfaces: color roles, borders, corners, shadows, texture, layers.
+5. Details: icons, image cropping, button states, requested motion.
 
-İlk üç başlıktaki büyük farkları yalnızca gradient veya gölge ekleyerek kapatmaya çalışma. Referansa benzerliği kullanıcının istediği farklılıkları koruyarak değerlendir.
+Resolve structural mismatches before adjusting decorative effects. Evaluate reference fidelity while preserving differences explicitly requested by the user.
 
-## Çalışan arayüzde
+## Working interface
 
-- Hedef masaüstü ve mobil genişlikte render et; yatay taşma, kesilen içerik ve çakışma var mı bak.
-- Navigasyon, menü, düğme, form ve kapsam içindeki durumları gerçekten dene.
-- Klavye odağını, etiketleri ve dokunma hedeflerini kontrol et; araç varsa kontrastı ölç.
-- Harici servis eksikliğinde demo davranışıyla gerçek başarı mesajını ayır.
-- Koddan uyarlanan yerleşim, efekt ve durum mekanizmalarının hedef uygulamada istenen sonucu ürettiğini kontrol et.
-- İlgili build/lint veya mevcut proje kontrollerini çalıştır. Görsel kontrol ile teknik kontrolü ayrı raporla.
-- Sorun düzelince yalnızca etkilenen kontrolleri tekrarla.
+- Render relevant desktop/mobile widths and check overflow, clipping, and overlap.
+- Exercise navigation, menus, buttons, forms, and scoped state changes.
+- Check focus, labels, and touch targets; measure contrast when tools permit.
+- Distinguish demo behavior from real service success.
+- Verify adapted layout, surface, and state mechanisms in the target implementation.
+- Run appropriate build/lint/project checks. Report visual and technical verification separately.
+- Recheck affected areas after fixes rather than repeating unrelated checks.
 
-## Teslimat öncesi
+## Delivery
 
-- Tamamlanan çıktı, brief veya kod talebinin tamamını karşılıyor mu?
-- Kullanılan kaynakların etkisi bir iki somut örnekle açıklanabiliyor mu?
-- Çalıştırılmayan test, görülmeyen ekran veya doğrulanmayan font hakkında iddia var mı?
-- Varsa temel engel ve onun sonuç üzerindeki etkisi kısa ve açık mı?
+- Does the deliverable satisfy the complete requested scope?
+- Can reference influence be explained with one or two concrete examples?
+- Are any tests, views, fonts, or behaviors claimed without verification?
+- Are material blockers and their consequences stated clearly and briefly?

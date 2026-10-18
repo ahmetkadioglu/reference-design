@@ -1,10 +1,9 @@
 interface:
-  display_name: Referansla Tasarla
-  short_description: Referansları belleğe al, birikimden tasarım üret
-  default_prompt: $reference-design ile verdiğim siteleri görsel ve teknik olarak
-    inceleyip referans belleğine kaydet; site istediğimde bu bellekten yararlan.
-  icon_small: assets/icon.svg
-  icon_large: assets/icon.svg
+  display_name: "Reference Design"
+  short_description: "Learn references and build from persistent design memory"
+  default_prompt: "$reference-design Analyze and save these reference websites, then use reference memory when I request an interface."
+  icon_small: "assets/icon.svg"
+  icon_large: "assets/icon.svg"
 policy:
   products:
   - chatgpt

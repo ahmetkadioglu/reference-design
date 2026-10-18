@@ -1,71 +1,71 @@
-# Frontend ve kaynak kod incelemesi
+# Frontend and source-code inspection
 
-URL veya kod verilen görevlerde görsel analize ek olarak bu akışı uygula. İncelemeyi kullanıcının önemsediği sayfa, bileşen ve efektlerle sınırla; ilgisiz bütün bundle'ları okumaya çalışma.
+Apply this workflow alongside visual analysis when URLs or code are supplied. Focus on the pages, components, and effects relevant to the brief rather than reading unrelated bundles.
 
-## Erişim katmanlarını ayır
+## Separate access layers
 
-| Elde olan kaynak | Çıkarılabilecek bilgi | Kesinleştirilemeyecek bilgi |
+| Available source | Supported conclusions | Unsupported conclusions |
 | --- | --- | --- |
-| Ekran görüntüsü | Görsel oranlar, yüzey, hiyerarşi; yaklaşık değerler | Özgün CSS, DOM, JS, hover, klasör ağacı |
-| HTML / render edilmiş DOM | Eleman ağacı, semantik, sınıflar, tekrarlanan yapılar | Özgün framework bileşen sınırları, kaynak klasörleri |
-| CSS / computed style | Tanımlı kurallar; runtime erişiminde belirli öğenin uygulanmış değerleri | Kullanılmayan bir kuralın gerçekten etkili olduğu |
-| Tarayıcıya gönderilen JS | Erişilebilen davranış kodu ve bazı teknoloji izleri | Minify edilmiş koddan bütün özgün mimari; sunucu kodu |
-| Verilen veya açık kaynak repo | Gerçek dosyalar, bileşenler, tokenlar, durum mantığı ve bağımlılık bildirimleri | Yayındaki sürümle eşitliği doğrulanmayan kaynakların canlı davranışı |
+| Screenshot | Visual proportions, surfaces, hierarchy, approximate values | Original CSS/DOM/JS, hover behavior, source directories |
+| HTML / rendered DOM | Element tree, semantics, classes, repeated structures | Original framework component boundaries or folder layout |
+| CSS / computed styles | Declared rules; applied values for inspected runtime states | Whether an unused declaration affects the page |
+| Delivered JavaScript | Accessible behavior code and some technology signals | The complete original architecture or server implementation |
+| Accessible source repository | Actual files, components, tokens, state logic, dependency manifests | Whether a different revision matches the deployed version |
 
-Ortamın araç, tarayıcı ve oturum kurallarına uy. DOM değerlendirme veya ağ kaynaklarına erişim desteklenmiyorsa mevcut izinli araçları kullan; desteklenmeyen DevTools yeteneklerini varmış gibi varsayma. Yalnızca erişilebilir sayfaları, bağlı kaynakları ve verilen/erişilebilir repoyu incele.
+Follow the environment's browser, session, and tool rules. Do not assume DevTools access exists. Inspect only accessible pages, linked resources, and provided or accessible repositories.
 
-## 1. İlgili kodu bul
+## 1. Locate relevant implementation
 
-- Sayfanın ilk HTML'i ile JS sonrası render edilmiş DOM'u ayır. Boş bir uygulama kabuğunu tüm sayfanın kodu sanma.
-- İlgili DOM öğelerini, üst kapsayıcıları ve bağlanan stil/script kaynaklarını belirle. Erişilebilir CSS/JS dosyalarında ilgili seçici, sınıf, değişken veya olay üzerinden ara.
-- Araçlar izin verdiğinde salt okunur DOM ve computed style incelemesi yap; mevcut browser skill'inin izin verdiği API'lere uy. Accessibility snapshot'ını tam DOM/CSS incelemesi sayma.
-- Verilen repo/dosyalarda önce proje talimatlarını oku. İlgili bileşen, stiller, tema/token dosyaları, bağımlılık bildirimleri ve çağrı/ithalat ilişkilerini takip et.
-- Kaynak haritası doğrudan bağlı, erişilebilir ve ortam kuralları izin veriyorsa ilgili orijinal kaynağı incelemek için kullan. Özgün kaynak elde edilemiyorsa derlenmiş kod seviyesinde kaldığını belirt.
+- Distinguish initial HTML from the DOM rendered after JavaScript. An empty application shell is not the complete interface.
+- Identify relevant elements, ancestor containers, and linked styles/scripts. Search accessible sources by selector, class, variable, or event.
+- Use permitted read-only DOM/computed-style inspection. An accessibility snapshot is not a complete DOM/CSS inspection.
+- In repositories, read applicable project instructions first, then follow relevant components, styles, theme/token files, manifests, and imports.
+- Use directly linked, accessible source maps only when environment rules permit. State when analysis remains at compiled-code level.
 
-## 2. Yerleşim ve düzen mantığını çöz
+## 2. Explain layout and organization
 
-- Ana kapsayıcı genişliğini, max-width/width ilişkisini, margin/padding, gap ve hizalamayı çıkar.
-- Grid/flex kurallarını ve üst-alt eleman ilişkisini belirle: kolon tanımı, minmax/auto-fit, flex-basis/grow/shrink, order, wrap ve içerik büyüdüğündeki davranış.
-- Position, overflow, sticky, transform, z-index ve yeni stacking context oluşturan özelliklerin katman düzenine etkisini incele.
-- CSS custom property'lerini, tema kapsamlarını, tekrar eden tokenları ve bunların bileşenlere nasıl uygulandığını bul.
-- Media/container query kırılımlarını ve değişen kuralları kaydet. Kaynaktan bulunan breakpoint'i, gerçekten test edilen viewport'tan ayır; kırılım çevresindeki render davranışını imkân varsa kontrol et.
-- Kaynak repo varsa klasörlerin sorumluluklarını, ortak bileşenleri, varyant API'sini, stil kapsülleme yöntemini ve tekrarlanan kalıpları ilgili dosyalarla açıkla. Birkaç DOM tekrarından özgün dosya ağacı oluşturma.
+- Extract container sizing, max-width relationships, margins, padding, gaps, and alignment.
+- Trace grid/flex parent-child behavior: column definitions, minmax/auto-fit, basis/grow/shrink, order, wrapping, and content expansion.
+- Inspect positioning, overflow, sticky behavior, transforms, z-index, and stacking-context creation.
+- Find custom properties, theme scopes, repeated tokens, and how components consume them.
+- Record media/container queries and their changed rules. Separate source breakpoints from tested viewport behavior; inspect near a breakpoint when possible.
+- With source access, explain directory responsibilities, shared components, variant APIs, style encapsulation, and repeated patterns using actual files. Do not invent a source tree from repeated DOM elements.
 
-## 3. Efektin hangi katmanda üretildiğini bul
+## 3. Find the effect's real layer
 
-- Font ailesi/ağırlığı/boyutu, line-height, letter-spacing, font-face ve mevcutsa gerçekten kullanılan font bilgilerini incele. Yalnızca ilan edilmiş font stack'ini yüklenen fontun kanıtı sayma.
-- Renk, border, radius ve box-shadow değerlerini ilgili öğe ve durumda kaydet. Kaskad, override ve tema değişkeninin çözülmüş sonucunu kontrol et.
-- Gradient, arka plan görseli, SVG filter, texture asset, canvas veya CSS filtresi seçeneklerinden hangisinin kanıtlandığını araştır.
-- ::before/::after katmanlarını, opacity, mix-blend-mode, mask, filter, backdrop-filter ve isolation ilişkisini incele.
-- Grain için örneğin SVG feTurbulence, doku görseli veya canvas üretimi gibi gerçek kaynağı ara; görünen pütürü tek başına belirli bir teknik diye adlandırma.
-- Blur'un arka planı mı öğenin kendisini mi etkilediğini ayır. Verilen tek bir blur kuralından tüm yüzeyi glassmorphism diye etiketleme.
+- Inspect font family/weight/size, leading, tracking, font-face, and actual resolved fonts when tools expose them. A declared font stack does not establish successful loading.
+- Record colors, borders, radius, and shadows for the relevant element and state. Account for cascade, overrides, and resolved theme variables.
+- Determine whether a surface uses gradients, background images, SVG filters, texture assets, canvas, or CSS filters.
+- Trace pseudo-elements, opacity, blending, masks, filters, backdrop filters, and isolation.
+- For grain, find the actual source, such as SVG turbulence, a texture asset, or canvas generation. Texture visible in a screenshot does not identify its implementation.
+- Distinguish filtering an element from blurring the background behind it. One blur declaration does not establish a glass treatment across the whole interface.
 
-## 4. Etkileşim ve hareket mantığını izle
+## 4. Follow interaction and motion
 
-- Hover/focus/active/açık-kapalı durumunun CSS pseudo-class, sınıf, data/aria attribute veya JS state ile nasıl değiştiğini incele.
-- Transition/keyframe hedeflerini, süre/delay/easing değerlerini ve tetikleyiciyi bul. Runtime kontrolü mümkünse davranışı gör; salt kod bulgusunu çalışırken doğrulanmış diye sunma.
-- Menü, sekme veya diyalog için tetikleyici → durum değişimi → DOM/sınıf/attribute değişimi → görsel sonuç bağını takip et.
-- Scroll tabanlı etki varsa ilgili observer/listener/animasyon bağını araştır. Tek başına script dosya adından kullanılan mekanizmayı ilan etme.
-- Framework/animasyon kütüphanesini bağımlılık, ithalat veya açık runtime işaretiyle destekle; sınıf adı ve yüzeysel benzerliği kanıt sayma. Kaynak repo yoksa mimari çıkarımının sınırını belirt.
+- Find whether hover/focus/active/open states come from pseudo-classes, classes, data/ARIA attributes, or JavaScript state.
+- Identify transition/keyframe targets, timing, delays, easing, and triggers. Verify behavior at runtime when possible; source inspection alone is not an execution test.
+- Follow trigger → state change → DOM/class/attribute update → visual result for menus, tabs, and dialogs.
+- For scroll effects, trace the relevant observer/listener/animation connection. A script filename is not proof of a mechanism.
+- Support framework/library claims with dependencies, imports, or explicit runtime evidence. Surface similarity and class names are insufficient. State architectural inference limits without repository access.
 
-## 5. Bulguyu uygulanabilir karara dönüştür
+## 5. Convert findings into decisions
 
-Kısa bir çalışma kaydı tut; her görevde uzun rapor üretmek gerekmez:
+A short working table is enough:
 
-| Özellik | Kanıt | Mekanizma | Hedef projeye uyarlama |
+| Feature | Evidence | Mechanism | Target adaptation |
 | --- | --- | --- | --- |
-| Kart düzeni | Stil dosyasındaki .cards ve media query | Masaüstünde grid, belirli kırılımda tek sütun | Mevcut CardList bileşenine aynı düzen ilkesini uygula |
-| Pütürlü yüzey | .card::before ve bağlı texture asset | Düşük opaklıklı ayrı yüzey katmanı | Metin üstünde okunabilirliği koruyan dekoratif katman kur |
-| Menü | Buton handler'ı ve aria-expanded | Duruma bağlı panel açılması | Projenin mevcut state ve erişilebilir menü düzenine uyarla |
+| Card layout | .cards and its media query in the inspected stylesheet | Grid changes to one column at the observed breakpoint | Apply that layout principle to the existing CardList |
+| Textured surface | .card::before and its linked texture | Separate low-opacity decorative layer | Preserve legibility and pointer access |
+| Menu | Handler and aria-expanded update | State-controlled panel visibility | Use the project's existing state/accessibility pattern |
 
-Kanıt yanında dosya/URL ve seçici/fonksiyon belirt; varsa satır veya incelenen runtime durumunu ekle. İsim ve sayıları gerçekten gördüğün kaynaktan kullan. Verilmeyen hedef tokenları öneri olarak etiketle.
+Include source URL/file and selector/function, plus a line or runtime state when available. Use names and values actually found in the source. Label new target tokens as proposals.
 
-Orijinal implementasyon ile seçtiğin hedef implementasyonu ayır. Kullanıcının promptu ve mevcut proje mimarisi doğrultusunda mekanizmayı uyarla; referansın framework'ünü otomatik zorunluluk yapma.
+Distinguish the original mechanism from the target implementation. Adapt to the user's brief and existing architecture instead of imposing the reference stack.
 
-## Tamamlama ölçütü
+## Completion criteria
 
-- İlgili görünümün hangi DOM/yerleşim, stil/katman ve etkileşim mantığıyla oluştuğu açıklanabiliyor.
-- Kanıtlanan en önemli özellikler somut kaynağa bağlanabiliyor.
-- Teknik erişim eksikleri ve runtime'da doğrulanmayan bulgular açık.
-- Kaynak repo verilmişse ilgili bileşen ve dosya düzeni incelenmiş; verilmemişse bu mimari uydurulmamış.
-- Uygulama kararı hem kullanıcı promptunu hem hedef projenin yapısını koruyor.
+- Explain the relevant DOM/layout, styling/layers, and interaction logic.
+- Connect important findings to concrete evidence.
+- State unavailable layers and runtime verification limits.
+- Inspect actual component/file organization when a repository is available; otherwise leave those boundaries unknown.
+- Preserve the explicit brief and target project's conventions in the implementation plan.

@@ -1,69 +1,73 @@
-# Referansla Tasarla · Reference Design
+# Reference Design
 
-Referans web sitelerini görsel ve teknik olarak analiz eden, bulguları kalıcı bir referans belleğine kaydeden ve sonraki arayüzleri bu birikimden yararlanarak oluşturan agent skill'i.
+An agent skill that studies reference websites, records visual and implementation evidence in persistent memory, and builds future interfaces from that collection and your brief.
 
-## Codex / VS Code kurulumu
+## Install in Codex / VS Code
 
-Codex sohbetine şu isteği gönder:
+Paste this into the Codex chat:
 
 ```text
 $skill-installer https://github.com/ahmetkadioglu/reference-design/tree/main/skills/reference-design
 ```
 
-Özel repo kullanıldığında kurulum ortamına GitHub erişimi de verilmelidir. Kurulumdan sonra `/skills` listesinden `reference-design` skill'ini kontrol et; gerekiyorsa Codex'i yeniden başlat.
+Check `/skills` after installation and restart Codex if the skill does not appear. Private repositories require authenticated access in the installation environment.
 
-Skill dosyaları `skills/reference-design/` altında. Elle kurulumda bu klasörün tamamını kişisel `~/.agents/skills/reference-design/` dizinine kopyala. Windows karşılığı `%USERPROFILE%\.agents\skills\reference-design\` olur. SSH veya WSL ile çalışan Codex için kurulumu agent'ın çalıştığı ortamda yap.
+For manual installation, copy the complete `skills/reference-design/` directory to `~/.agents/skills/reference-design/`. On Windows, use `%USERPROFILE%\.agents\skills\reference-design\`. When using SSH or WSL, install where the agent runs.
 
-## Kullanım
+## Use
 
-Referansları belleğe ekle:
-
-```text
-$reference-design
-Bu siteleri referans belleğine ekle: [URL 1], [URL 2].
-İlk sitenin tipografisini, ikincinin kart yüzeylerini beğeniyorum.
-```
-
-Daha sonra yeni link vermeden üret:
+Learn references:
 
 ```text
 $reference-design
-Referans belleğinden yararlanarak bir randevu platformunun ana sayfasını oluştur.
-Açık tema, mavi vurgu, güçlü başlıklar ve hafif pütürlü kartlar istiyorum.
+Add these websites to reference memory: [URL 1], [URL 2].
+I like the first site's typography and the second site's card surfaces.
 ```
 
-Yalnızca tasarım promptu, brief veya analiz istiyorsan bunu açıkça belirt. Yalnızca referans ekleme isteği belleği günceller; site üretimi ayrı bir görevdir.
+Build later without resending the URLs:
 
-## İnceleme kapsamı
+```text
+$reference-design
+Use reference memory to build a booking platform homepage.
+Use a light theme, blue accents, strong headings, and subtly textured cards.
+```
 
-- Görsel hiyerarşi, tipografi, renk, boşluk, yüzey, doku ve responsive düzen.
-- Erişilebilen HTML/DOM, stil dosyaları, computed style, grid/flex, tokenlar ve efekt katmanları.
-- CSS/JavaScript etkileşimleri, animasyonlar ve durum değişimleri.
-- Kaynak repo verildiğinde ilgili dosya, bileşen ve stil organizasyonu.
-- Her bulgu için kaynak, kanıt türü, inceleme tarihi ve erişim sınırları.
+Request analysis, a brief, or an implementation prompt explicitly when that is the desired output. Reference intake alone updates memory without starting a website build. Instructions are maintained in English; the agent responds in the user's language, and search retains useful multilingual aliases.
 
-Canlı site yalnızca tarayıcıya gönderilen kodu açığa çıkarır. Özgün proje yapısı ve sunucu kodu kaynak erişimi gerektirir. Skill, erişilemeyen ayrıntıları doğrulanmış bulgu gibi sunmaz.
+## What it inspects
 
-## Referans belleği
+- Visual hierarchy, typography, color, spacing, surfaces, texture, and responsive composition.
+- Accessible HTML/DOM, stylesheets, computed styles, layout rules, tokens, and effect layers.
+- Relevant CSS/JavaScript interactions, animation, and state changes.
+- Actual files, components, styling organization, and dependencies when source access is provided.
+- Evidence type, source, inspection date, user preferences, and access limitations.
 
-Bellek varsayılan olarak kurulu skill'in `references/memory/store.json` dosyasında tutulur ve ilk kayıtta oluşturulur. Referans kayıtları bu dağıtım reposuna dahil edilmez; belleğe yazmak otomatik GitHub gönderimi yapmaz. Aynı URL güncellenir; eski analizler geçmişte korunur. Yeni üretimlerde uygun kayıtlar aranır ve yalnızca seçilenlerin ayrıntıları okunur.
+A live site exposes delivered frontend resources. Original project architecture and server code require source access. Unsupported implementation details remain unknown or are labeled as proposals.
 
-Kurulum konumundan bağımsız tek bir bellek için `REFERENCE_DESIGN_MEMORY_ROOT` ortam değişkenini kalıcı bir dizine ayarlayabilirsin. Birden fazla cihazın aynı birikimi kullanması, o dizinin ayrıca senkronize edilmesini gerektirir. GitHub'dan skill kurulumu otomatik bellek senkronizasyonu kurmaz.
+## Persistent memory
 
-Bellek aracı Python 3 ile çalışır; ek Python paketi gerektirmez:
+The default store is the installed skill's `references/memory/store.json`, created on first intake. Personal records are excluded from this distribution repository and are not automatically pushed to GitHub. Repeated URLs update existing records; previous versions remain in history.
+
+Set `REFERENCE_DESIGN_MEMORY_ROOT` to a persistent directory to keep one store independent of the installation location. Sharing it across devices requires separate synchronization; installing the skill does not configure that automatically.
+
+The helper uses Python 3 with no external Python dependencies:
 
 ```bash
 python3 skills/reference-design/scripts/reference_memory.py list
-python3 skills/reference-design/scripts/reference_memory.py search 'grain kart'
+python3 skills/reference-design/scripts/reference_memory.py search 'grain card'
 python3 skills/reference-design/scripts/reference_memory.py validate
 ```
 
-Windows'ta Python kurulumuna göre `python3` yerine `py -3` veya `python` kullan. İsteğe bağlı `--root` parametresi alt komuttan önce gelir.
+On Windows, use `py -3` or `python` if appropriate for your installation. Place an optional `--root` argument before the subcommand.
 
-## Gereksinimler
+## Requirements
 
-- Agent Skills uyumlu ve dosya okuyabilen bir agent; bu kurulum akışı Codex içindir.
-- Bellek yardımcısı için Python 3 ve yazılabilir kalıcı bir konum.
-- Canlı siteleri incelemek için hedef agent'ın ortamında izinli web/tarayıcı ve gerekli DOM/CSS inceleme araçları.
+- An Agent Skills-compatible agent with file access; installation above targets Codex.
+- Python 3 and writable persistent storage for the memory helper.
+- Permitted web/browser and relevant DOM/CSS inspection tools for live reference analysis.
 
-Skill, agent'ın mevcut araçları ve izinleriyle çalışır; tarayıcı veya servis erişimini kendiliğinden sağlamaz.
+The skill uses the host's available tools and permissions. It does not install a browser or grant access to services.
+
+## Comparison with other design skills
+
+Read the [source-based comparison](docs/design-skill-comparison.md) for a review of Anthropic frontend-design, Impeccable, UI UX Pro Max, Taste Skill, and Vercel web-design-guidelines, including our current gaps and proposed priorities.

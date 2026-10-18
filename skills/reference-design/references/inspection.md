@@ -1,67 +1,67 @@
-# Referans inceleme rehberi
+# Reference inspection guide
 
-Görevin ölçeğine göre derinlik seç. Tek kart için kartı ve ilgili durumlarını; tam site için ilgili sayfa/bölümleri incele. Kullanıcının özellikle tarif ettiği etkilere öncelik ver.
+Scale inspection to the request. For a card, inspect that card and relevant states. For a site, inspect relevant pages and sections. Prioritize features the user explicitly identifies.
 
-## İncelenecek özellikler
+## Inspect these properties
 
-| Alan | Bakılacak ayrıntılar |
+| Area | Useful observations |
 | --- | --- |
-| Kompozisyon | İçerik genişliği, sütun oranları, hizalama, asimetri, kenar boşluğu, bölüm ritmi |
-| Hiyerarşi | İlk dikkat noktası, başlık/gövde oranı, vurgu, CTA konumu, okuma sırası |
-| Tipografi | Serif/sans/mono karakteri, kalınlık, boyut oranı, satır yüksekliği, harf aralığı, satır uzunluğu |
-| Renk | Sayfa/yüzey/metin/kenarlık/vurgu rolleri, doygunluk, sıcaklık, kontrast |
-| Yüzey | Kart biçimi, köşeler, kontur, gölge yayılımı, yükselti, katman sırası |
-| Doku | Grain/noise yoğunluğu ve ölçeği, gradient yönü, transparanlık, blur, parlamalar |
-| Bileşen | Navigasyon, düğme, kart, input, etiket, tablo; tutarlı tekrar ve içerik yoğunluğu |
-| Görsel dil | Fotoğraf/illüstrasyon yaklaşımı, oran, kırpma, ikon kalınlığı ve boyutu |
-| Etkileşim | Gözlenebilen hover, focus, açık/kapalı, aktif, yükleniyor, boş ve hata durumları |
-| Hareket | Gözlenen tetikleyici, yön, ritim, hiyerarşiye etkisi; gözlenmeyeni öneri olarak belirt |
-| Responsive | Gerçekten incelenen görünümde kolon değişimi, sıra, menü, boşluk ve tipografi |
+| Composition | Content width, column proportions, alignment, asymmetry, margins, section rhythm |
+| Hierarchy | First focal point, heading/body ratio, emphasis, CTA location, reading order |
+| Typography | Serif/sans/mono character, weight, size relationships, leading, tracking, line length |
+| Color | Page/surface/text/border/accent roles, saturation, temperature, contrast |
+| Surfaces | Card shape, corners, outlines, shadow spread, elevation, layer order |
+| Texture | Grain scale/intensity, gradient direction, transparency, blur, highlights |
+| Components | Navigation, buttons, inputs, labels, tables; repetition and information density |
+| Imagery | Photo/illustration treatment, aspect ratio, cropping, icon weight and scale |
+| Interaction | Observed hover, focus, open/closed, active, loading, empty, and error states |
+| Motion | Observed trigger, direction, rhythm, and purpose; label unobserved behavior as proposed |
+| Responsive | Observed column, order, menu, spacing, and type changes at each inspected viewport |
 
-## Kanıt notu
+## Evidence notes
 
-Her kaynak için yalnızca karar vermeye yarayan notları tut:
+Keep only notes that support decisions:
 
 ```text
-Kaynak: URL veya verilen görsel adı
-İncelenen: sayfa/bölüm, masaüstü/mobil, gözlenen durumlar
-Erişim: görsel / DOM / stil dosyası / computed style / JS / kaynak repo; her birinin durumu
-Gözlem: görülen biçim, hiyerarşi, renk ve davranış
-Teknik kanıt: öğe/seçici/dosya, ilgili kural veya davranış, uygulandığı görünüm/durum
-Kanıt türü: görsel tahmin / kodda beyan / runtime doğrulama / kaynak kod
-Yaklaşık tahmin: görüntüden çıkarılan ölçü veya muhtemel teknik
-Öneri: hedef ürüne aktarılacak ve uyarlanacak ilke
-Kısıt: görülmeyen mobil görünüm, doğrulanamayan font/efekt vb.
+Source: URL or supplied image name
+Inspected: page/section, viewport, observed states
+Access: visual / DOM / stylesheet / computed style / JS / repository; status of each
+Observation: visible form, hierarchy, color, behavior
+Technical evidence: element/selector/file, rule or behavior, applicable viewport/state
+Evidence type: visual estimate / code declaration / runtime verification / source code
+Approximation: estimated measurement or possible implementation
+Adaptation: principle to reuse and how to change it for the target product
+Limitation: missing mobile view, unverified font/effect, unavailable code, etc.
 ```
 
-- Font adını CSS/computed style veya açık kaynak bilgisiyle doğrulamadan kesin söyleme; görsel sınıfını tarif et ve uygun alternatif öner.
-- Sadece ekran görüntüsü varsa hover/animasyon ve ekran dışında kalan bölümleri gözlenmiş gibi sunma.
-- Renk ve ölçüleri gerçekten örneklemediysen kesin kaynak değeri olarak yazma. Önerilen tokenları yaklaşık gözlemden ayrı göster.
-- Ekran görüntüsü CSS tekniğini kanıtlamaz. Örneğin blur izlenimi gerçek backdrop-filter yerine görsel bir arka plandan geliyor olabilir.
-- Yeni bir referans eski analizi değiştiriyorsa kanıt notunu ve kararları güncelle.
+- Confirm exact font families through CSS/computed styles or source evidence; otherwise describe their visual character and propose alternatives.
+- A still image does not establish hover, animation, or off-screen sections.
+- Label unmeasured colors and dimensions as estimates. Keep proposed tokens separate from source measurements.
+- An image does not prove a CSS mechanism: apparent background blur could be baked into an asset.
+- Update evidence and decisions when a new reference changes the analysis.
 
-## Kaynaklardan sentez
+## Synthesize sources
 
-Birden fazla referansta gerektiğinde şu küçük tabloyu kullan:
+Use a compact mapping when several references contribute:
 
-| Tasarım alanı | Kaynak | Görsel/teknik bulgu | Hedef ürüne uyarlama |
+| Design area | Source | Supported finding | Target adaptation |
 | --- | --- | --- | --- |
-| Tipografi | A | Büyük başlık, kısa satırlar | Ürünün içeriğiyle belirgin başlık hiyerarşisi |
-| Kartlar | B | İnce kontur, hafif gölge | Kullanıcının istediği renk ve köşe sistemiyle yüzeyler |
+| Typography | A | Large headings and short lines | Apply a clear hierarchy to the product's own content |
+| Cards | B | Thin outlines and soft shadows | Adapt to the requested palette and corner system |
 
-Kullanıcı kaynakların rollerini belirlediyse tabloyu o rollere göre doldur. Belirlemediyse bütün sitelerin bütün özelliklerini harmanlama; baskın yönü seç ve gerekçesini kısa tut.
+Honor assigned roles. Otherwise select a primary direction and supporting influences rather than combining every characteristic of every site.
 
-## Tasarım kararı kaydı
+## Decision record
 
-Uygulama öncesinde aşağıdakileri netleştir; sayıların kaynaktan ölçüm mü kendi önerin mi olduğunu belirt:
+Resolve these before implementation; identify source measurements versus proposed values:
 
-- Sayfa ve bileşen kapsamı; ana kullanıcı eylemi.
-- Zorunlu kullanıcı tercihleri ve yapılmayacak görsel tercihler.
-- Baskın referans ve yardımcı referansların rolleri.
-- Anlamsal renk paleti; başlık, gövde ve yardımcı metin hiyerarşisi.
-- Genişlik, grid, boşluk, köşe, kenarlık, gölge ve varsa doku değerleri.
-- Kanıtlanan DOM/yerleşim, CSS/efekt ve etkileşim mekanizmaları; hedef bileşen/stil düzeni ve uyarlama kararları.
-- Gözlenen mobil davranış ile tasarlanan mobil uyarlamanın ayrımı.
-- Gerekli durumlar ve kabul ölçütleri.
+- Page/component scope and primary user action.
+- Required preferences and excluded visual choices.
+- Primary and supporting reference roles.
+- Semantic palette and heading/body/supporting type hierarchy.
+- Width, grid, spacing, radius, border, shadow, and optional texture values.
+- Supported DOM/layout, CSS/layer, and interaction mechanisms; target component/style organization.
+- Observed mobile behavior versus your proposed adaptation.
+- Required states and acceptance criteria.
 
-Büyük projede mevcut dokümantasyon düzenine uygun kayıt tut; küçük görevde kısa çalışma notu yeterlidir. Her iş için otomatik rapor dosyaları üretme.
+Use the project's existing documentation structure for substantial work. Short working notes suffice for small tasks; do not generate a report file by default.
