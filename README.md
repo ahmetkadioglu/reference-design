@@ -2,19 +2,30 @@
 
 An agent skill that studies reference websites, records visual and implementation evidence in persistent memory, and builds future interfaces from that collection and your brief.
 
-## Install in Codex / VS Code
+## Install for your agent
 
-Paste this into the Codex chat:
+One shared skill bundle supports Codex, Claude Code, Cursor, GitHub Copilot, Gemini CLI, OpenCode, Windsurf / Devin Desktop, Cline, Roo Code, Google Antigravity, and Kilo Code. See the [compatibility matrix](docs/agent-compatibility.md) for documented paths, invocation differences, and verification limits.
 
-```text
-$skill-installer https://github.com/ahmetkadioglu/reference-design/tree/main/skills/reference-design
+With Node.js, use the [Skills CLI](https://github.com/vercel-labs/skills) and select your agents:
+
+```bash
+npx skills add ahmetkadioglu/reference-design --skill reference-design
 ```
 
-Check `/skills` after installation and restart Codex if the skill does not appear. Private repositories require authenticated access in the installation environment.
+Or use the bundled Python 3.10+ installer from a checkout:
 
-For manual installation, copy the complete `skills/reference-design/` directory to `~/.agents/skills/reference-design/`. On Windows, use `%USERPROFILE%\.agents\skills\reference-design\`. When using SSH or WSL, install where the agent runs.
+```bash
+git clone https://github.com/ahmetkadioglu/reference-design.git
+cd reference-design
+python tools/install.py install --agent codex claude-code cursor --scope user
+python tools/install.py doctor --agent codex claude-code cursor --scope user
+```
+
+Select only the agents you use; `python tools/install.py list` shows all profiles. Project installations, dry runs, updates preserving private memory, Windows commands, and shared-memory setup are covered in the [installation guide](docs/agent-compatibility.md). Installation does not configure browser tools or grant permissions.
 
 ## Use
+
+The examples below use Codex invocation. In Claude Code or Cursor, use `/reference-design`; in Cascade, use `@reference-design`. On other hosts, ask to use the `reference-design` skill and confirm it loads.
 
 Learn references:
 
@@ -142,7 +153,7 @@ The [recorded Morrow development case](evals/examples/morrow/README.md) includes
 
 ## Requirements
 
-- An Agent Skills-compatible agent with file access; installation above targets Codex.
+- An Agent Skills-compatible agent with file access; see the documented multi-agent profiles above.
 - Python 3.10+ and writable persistent storage for the helpers.
 - Permitted web/browser and relevant DOM/CSS inspection tools for live reference analysis.
 - Optional Playwright and Chromium for the bundled capture adapter.

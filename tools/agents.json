@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "checked_on": "2026-10-18",
+  "agents": {
+    "universal": {
+      "name": "Shared Agent Skills",
+      "project": ".agents/skills",
+      "user": ".agents/skills",
+      "documentation": "https://agentskills.io/integrate-skills",
+      "activation": "Use the reference-design skill"
+    },
+    "codex": {
+      "name": "Codex",
+      "project": ".agents/skills",
+      "user": ".agents/skills",
+      "documentation": "https://learn.chatgpt.com/docs/build-skills",
+      "activation": "$reference-design"
+    },
+    "claude-code": {
+      "name": "Claude Code",
+      "project": ".claude/skills",
+      "user": ".claude/skills",
+      "documentation": "https://code.claude.com/docs/en/skills",
+      "activation": "/reference-design"
+    },
+    "cursor": {
+      "name": "Cursor",
+      "project": ".cursor/skills",
+      "user": ".cursor/skills",
+      "documentation": "https://cursor.com/docs/skills",
+      "activation": "/reference-design"
+    },
+    "github-copilot": {
+      "name": "GitHub Copilot",
+      "project": ".github/skills",
+      "user": ".copilot/skills",
+      "documentation": "https://docs.github.com/en/copilot/concepts/agents/about-agent-skills",
+      "activation": "Use the reference-design skill"
+    },
+    "gemini-cli": {
+      "name": "Gemini CLI",
+      "project": ".gemini/skills",
+      "user": ".gemini/skills",
+      "documentation": "https://geminicli.com/docs/cli/skills/",
+      "activation": "Use the reference-design skill; /skills list to verify discovery"
+    },
+    "opencode": {
+      "name": "OpenCode",
+      "project": ".opencode/skills",
+      "user": ".config/opencode/skills",
+      "documentation": "https://opencode.ai/docs/skills/",
+      "activation": "Use the reference-design skill"
+    },
+    "windsurf": {
+      "name": "Windsurf / Cascade (legacy paths)",
+      "project": ".windsurf/skills",
+      "user": ".codeium/windsurf/skills",
+      "documentation": "https://docs.devin.ai/desktop/cascade/skills",
+      "activation": "@reference-design"
+    },
+    "devin": {
+      "name": "Devin Desktop / Cascade",
+      "project": ".devin/skills",
+      "user": ".config/devin/skills",
+      "documentation": "https://docs.devin.ai/desktop/cascade/skills",
+      "activation": "@reference-design"
+    },
+    "cline": {
+      "name": "Cline",
+      "project": ".cline/skills",
+      "user": ".cline/skills",
+      "documentation": "https://docs.cline.bot/customization/skills",
+      "activation": "Use the reference-design skill"
+    },
+    "roo-code": {
+      "name": "Roo Code",
+      "project": ".roo/skills",
+      "user": ".roo/skills",
+      "documentation": "https://roocodeinc.github.io/Roo-Code/features/skills/",
+      "activation": "Use the reference-design skill"
+    },
+    "antigravity": {
+      "name": "Google Antigravity",
+      "project": ".agents/skills",
+      "user": ".gemini/config/skills",
+      "documentation": "https://antigravity.google/docs/skills",
+      "activation": "/reference-design"
+    },
+    "kilo": {
+      "name": "Kilo Code",
+      "project": ".kilo/skills",
+      "user": ".kilo/skills",
+      "documentation": "https://kilo.ai/docs/customize/skills",
+      "activation": "Use the reference-design skill"
+    }
+  }
+}

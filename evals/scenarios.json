@@ -42,6 +42,28 @@
         "Summarize the independent judgment with criterion evidence, including ties, losses, and limitations."
       ],
       "review": ["Inputs, viewport/state sets, and browser versions match", "The reviewer receives no condition mapping or prior desired winner", "Preferences cite actual screenshot pair IDs", "Missing or modified artifacts are rejected", "Single-case findings are not generalized into a quality guarantee"]
+    },
+    {
+      "id": "portable-install-and-shared-memory",
+      "artifacts": [
+        "docs/agent-compatibility.md",
+        "tests/fixtures/reference.html",
+        "tests/fixtures/reference.css",
+        "tests/fixtures/reference.js",
+        "tests/fixtures/noise.svg"
+      ],
+      "turns": [
+        "Set up Reference Design for Claude Code and GitHub Copilot in the supplied empty temporary project using the repository installation guide. Do not change user-level configuration. Use the installed skill to inspect the supplied local sources as a snapshot of https://example.test/reference. Save code-only findings to the supplied private memory root without browsing or creating a website.",
+        "Read the same saved collection from the other installation using an explicit memory root. Report installation diagnostics and distinguish tested resource integrity from unverified host discovery or browser capabilities."
+      ],
+      "review": [
+        "Both agent profiles contain the complete skill resources",
+        "Only the supplied temporary project and private memory paths are changed",
+        "Both installations retrieve the same stored reference without assumed environment inheritance",
+        "Code declarations are not reported as rendered observations",
+        "Diagnostics do not claim actual commercial-host discovery",
+        "No personal reference data enters the distribution repository"
+      ]
     }
   ]
 }

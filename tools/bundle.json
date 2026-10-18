@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "files": [
+    "SKILL.md",
+    "agents/openai.yaml",
+    "assets/icon.svg",
+    "references/agent-portability.md",
+    "references/browser-capture.md",
+    "references/design-evaluation.md",
+    "references/implementation-inspection.md",
+    "references/inspection.md",
+    "references/interactions.md",
+    "references/mechanisms.md",
+    "references/project-design.md",
+    "references/quality-review.md",
+    "references/reference-memory.md",
+    "references/visual-review.md",
+    "requirements-browser.txt",
+    "scripts/browser_probe.js",
+    "scripts/capture_reference.py",
+    "scripts/design_evaluation.py",
+    "scripts/design_project.py",
+    "scripts/interaction_probe.js",
+    "scripts/interaction_trace.py",
+    "scripts/mechanism_memory.py",
+    "scripts/reference_memory.py"
+  ]
+}

@@ -7,6 +7,8 @@ description: Analyze user-provided reference websites visually and technically, 
 
 Inspect both the appearance of references and the implementation behind it. Save supported findings and reuse them in later work. For URLs or source code, technical inspection is required unless the user explicitly requests visual inspection only. Complete implementation requests as working interfaces. Reference-only requests update memory without starting a website build. Respond in the user's language.
 
+Use the same workflow across compatible agents. Read [the agent portability guide](references/agent-portability.md) when setting up a new host or when its tools, invocation, or storage differ. Resolve bundled resources against the actual installed skill folder and follow the host's tools and permissions.
+
 ## 0. Open memory and identify the task
 
 Read [the reference memory workflow](references/reference-memory.md) at the start of each task. The store is `references/memory/store.json`; use `scripts/reference_memory.py` to write and retrieve records. The file is created on first intake. Conversation history does not replace the store.
