@@ -251,16 +251,26 @@ def capture_patch(data, report):
     if not isinstance(limitations, list) or not all(isinstance(v, str) for v in limitations):
         raise ValueError("Capture limitations must be strings")
     evidence = []
+    interactions = []
     for shot in snapshots:
         if not isinstance(shot, dict) or not isinstance(shot.get("elements"), list):
             raise ValueError("Capture snapshot needs sampled elements")
         evidence.append({"kind": "runtime", "source": shot.get("url", url),
                          "locator": str(shot.get("viewport")) + "/" + str(shot.get("state")) + "/reduced-motion=" + str(bool(shot.get("reduced_motion"))),
                          "finding": "Captured %d representative elements and computed styles; screenshot capture is not a visual review." % len(shot["elements"])})
+        trace = shot.get("interaction_trace")
+        if trace and len(interactions) < 30:
+            interactions.append({"name": trace["name"], "viewport": shot.get("viewport"),
+                "reduced_motion": shot.get("reduced_motion", False), "passed": trace.get("passed"),
+                "changed_selectors": unique(c["selector"] for step in trace.get("steps", []) for c in step.get("changes", [])),
+                "executed_sources": unique(fn["source"] for step in trace.get("steps", []) for fn in step.get("executed_functions", []))})
+            evidence.append({"kind": "runtime", "source": shot.get("url", url), "locator": "scenario:" + trace["name"],
+                "finding": "Observed explicit actions, DOM/style deltas, and any available executed-code ranges. Passed configured expectations: " + str(trace.get("passed")) + ". Causal interpretation requires review."})
     patch = {"url": url, "status": "partial" if snapshots or previous.get("evidence") else "unavailable",
              "technical": {"capture": {"captured_at": report.get("captured_at"),
                                        "report": report.get("report_path"),
                                        "viewports": [s.get("viewport") for s in snapshots],
+                                       "interactions": interactions,
                                        "quality_counts": report.get("quality_counts", {})}},
              "evidence": unique(previous.get("evidence", []) + evidence),
              "limitations": unique(previous.get("limitations", []) + limitations +

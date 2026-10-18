@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "scenarios": [
+    {
+      "name": "menu-open",
+      "observe": ["#menu-toggle", "#menu"],
+      "steps": [{"action": "click", "selector": "#menu-toggle"}],
+      "expect": [{"selector": "#menu-toggle", "attribute": "aria-expanded", "equals": "true"}, {"selector": "#menu", "visible": true}]
+    },
+    {
+      "name": "availability-tab",
+      "observe": ["#tab-one", "#tab-two", "#panel-one", "#panel-two"],
+      "steps": [{"action": "click", "selector": "#tab-two"}],
+      "expect": [{"selector": "#panel-one", "visible": false}, {"selector": "#panel-two", "visible": true}, {"selector": "#menu", "visible": false}]
+    },
+    {
+      "name": "guide-dialog",
+      "observe": ["#dialog"],
+      "steps": [{"action": "click", "selector": "#open-dialog"}, {"action": "press", "selector": "#close-dialog", "key": "Enter"}],
+      "expect": [{"selector": "#dialog", "visible": false}]
+    },
+    {
+      "name": "header-scroll",
+      "observe": ["#header"],
+      "steps": [{"action": "scroll", "y": 400}],
+      "expect": [{"selector": "#header", "attribute": "data-scrolled", "equals": "true"}]
+    }
+  ]
+}

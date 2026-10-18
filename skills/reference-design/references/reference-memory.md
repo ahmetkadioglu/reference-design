@@ -4,6 +4,7 @@
 
 - The default store is this skill's `references/memory/store.json`. It is created on first intake. Resolve commands against the actual skill directory; examples below are relative to that directory.
 - The versioned JSON store contains all records. `search` returns short matches; `get` returns selected details. Do not load the whole store into model context for every task.
+- Reusable implementation patterns live beside it in `mechanisms.json`, managed by `scripts/mechanism_memory.py`. Read the mechanism guide when extracting or reusing them; reference intake does not automatically approve mechanism drafts.
 - Reuse a configured durable location through `REFERENCE_DESIGN_MEMORY_ROOT` or `--root /absolute/persistent/path`. Do not silently create a different store each session.
 - In ChatGPT Work, locate the existing `name: reference-design` manifest under `/root/.codex/skills/remote-skills`. The platform may use an ID-based directory name. Update that skill and memory rather than creating another copy.
 - In that Work Skills workspace, get the current remote revision and commit/push only this skill's relevant changes. A required push must succeed before reporting a durable save. Preserve unrelated changes.

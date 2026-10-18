@@ -1,0 +1,19 @@
+{
+  "case": "Morrow development comparison",
+  "generation_conditions": {
+    "output-one": "without custom skills",
+    "output-two": "with Reference Design during the upgrade"
+  },
+  "generation_scope": "One independent generation run per condition with equal supplied content/reference artifacts and available tools; no model overrides.",
+  "sha256": {
+    "evals/examples/morrow/brief.md": "97110634ef81d3a830ee336597137f6fbd65fb6d1069e48fd93a96eb9bb08a06",
+    "tests/fixtures/reference.html": "7815d13019a00afdc68713861d6c7806b3e6244da700024157994cfa63baef97",
+    "tests/fixtures/reference.css": "1f1fabae36da3b7a059d94044f2b4943ab65588b5457db94c26185518573c6b0",
+    "tests/fixtures/reference.js": "aa797b5c6190c9142a89d20d4a23f4d280c18eb869066d6e73720a05f49c1e54",
+    "tests/fixtures/noise.svg": "cad469697e2f4bb8c339dc6d84ed2003550161ae61fcd141ec61df2e549751f8",
+    "evals/examples/morrow/output-one/index.html": "2eca66acea5ed357e74027af6c18681b31745fffeb1da87a5d1791a5e38e67e0",
+    "evals/examples/morrow/output-one/noise.svg": "cad469697e2f4bb8c339dc6d84ed2003550161ae61fcd141ec61df2e549751f8",
+    "evals/examples/morrow/output-two/index.html": "84bc41b1a8f790f02af3caa7d4cc71068d2d045d21e7a59b2f6444ea7dd54649",
+    "evals/examples/morrow/output-two/noise.svg": "cad469697e2f4bb8c339dc6d84ed2003550161ae61fcd141ec61df2e549751f8"
+  }
+}

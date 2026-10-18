@@ -81,6 +81,28 @@ Reports include coverage limits. Cross-origin CSS rules, original component boun
 
 The helper uses isolated Chromium contexts and does not reuse account sessions. When host rules require a different browser workflow, the agent uses that permitted workflow instead. See the [capture guide](skills/reference-design/references/browser-capture.md) for options, exit codes, and adapter details.
 
+### Trace a requested interaction
+
+```bash
+python skills/reference-design/scripts/capture_reference.py https://example.com/ \
+  --output /absolute/private/captures \
+  --interactions /absolute/private/interaction-plan.json --trace-js
+```
+
+An explicit plan selects benign menu, tab, dialog, key, or scroll actions. Each step records before/after screenshots, DOM mutations, computed style changes, optional event-listener locations, and delivered JavaScript function ranges executed during the action window. Source excerpts and observations remain separate from causal interpretation. The tool does not expose internal framework state or reconstruct original source architecture. See the [interaction plan schema](skills/reference-design/references/interactions.md).
+
+## Reusable mechanisms
+
+Keep learned implementation patterns in private mechanism memory, linked to their reference records:
+
+```bash
+python skills/reference-design/scripts/mechanism_memory.py --root /absolute/private/memory extract --capture /absolute/capture/report.json
+python skills/reference-design/scripts/mechanism_memory.py --root /absolute/private/memory upsert --file reviewed-mechanisms.json
+python skills/reference-design/scripts/mechanism_memory.py --root /absolute/private/memory search 'layered card' --component card
+```
+
+Extraction produces drafts for layered surfaces, fluid type, responsive grids, and observed state transitions. The agent reviews the evidence, writes concrete adaptation steps, and records use conditions and limitations. Search uses reviewed mechanisms by default. Sources, revision history, and the current brief remain part of the decision. See the [mechanism workflow](skills/reference-design/references/mechanisms.md).
+
 ## Project design system
 
 Keep selected project decisions separate from reference evidence. Use an equivalent existing project system, or initialize a project document:
@@ -94,6 +116,29 @@ python skills/reference-design/scripts/design_project.py --project /absolute/pro
 ```
 
 The document stores master tokens/rules/reference roles and explicit page overrides. CSS export resolves inheritance; it does not rewrite existing styles automatically. See the [project guide](skills/reference-design/references/project-design.md) for the JSON schema. Audit, critique, and polish requests use the [quality review workflow](skills/reference-design/references/quality-review.md).
+
+## Evaluate actual design outcomes
+
+Build two outputs from equal briefs, content, references, and tool access. Capture them at identical viewport/state settings, then prepare a blinded review:
+
+```bash
+python skills/reference-design/scripts/design_evaluation.py prepare \
+  --baseline /absolute/baseline/report.json --candidate /absolute/candidate/report.json \
+  --brief /absolute/brief.md --output /absolute/private/review \
+  --key-file /absolute/private/unblinding/key.json
+```
+
+The reviewer receives only the A/B package and completes the judgment template with screenshot evidence. Summarization checks the original artifacts and maps preferences back to conditions:
+
+```bash
+python skills/reference-design/scripts/design_evaluation.py summarize \
+  --review /absolute/private/review --judgment /absolute/completed-judgment.json \
+  --key-file /absolute/private/unblinding/key.json
+```
+
+This evaluates generated interfaces through an independent review, not an automatic aesthetic score or pixel-similarity target. Inconclusive and unfavorable results remain part of the record. See the [evaluation guide](skills/reference-design/references/design-evaluation.md).
+
+The [recorded Morrow development case](evals/examples/morrow/README.md) includes an equal-input brief, two frozen implementations, an independent judgment, limitations, and a rerendering script. It is one case rather than a general quality benchmark.
 
 ## Requirements
 

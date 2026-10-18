@@ -11,16 +11,17 @@ import sys
 from urllib.parse import urlsplit
 
 from reference_memory import canonical_url, now, write_patches
+from interaction_trace import trace_scenario, validate_plan
 
 PROBE = Path(__file__).with_name("browser_probe.js")
 LIMITATIONS = [
     "Captured screenshots require agent visual review; capture alone is not a completed design analysis.",
     "Checks use representative DOM samples and basic name/contrast heuristics, not a complete accessibility audit.",
-    "JavaScript resources are indexed, not behavior-traced; source architecture requires repository inspection.",
+    "JavaScript coverage and event-listener evidence require opt-in tracing; original source architecture requires repository inspection.",
     "Cross-origin frames, closed shadow roots, canvas internals, and unvisited routes are not inspected.",
     "Fresh isolated browser contexts do not reuse account sessions; mobile widths are desktop-engine viewport emulation.",
     "Keyboard sampling does not establish complete navigation, focus-trap, or screen-reader coverage.",
-    "Hover/focus states run only when explicitly requested; forms, clicks, and submissions are not exercised.",
+    "UI actions run only when explicitly configured; no automatic form filling or submission workflow is provided.",
 ]
 
 
@@ -44,8 +45,11 @@ def keyboard_sample(page, count):
 
 
 def capture(browser, url, output, viewports, selectors=(), hover=(), focus=(), timeout=15000,
-            wait_for=None, keyboard_steps=8):
+            wait_for=None, keyboard_steps=8, interaction_plan=None, trace_js=False):
     canonical_url(url)
+    scenarios = validate_plan(interaction_plan) if interaction_plan is not None else []
+    if trace_js and not scenarios:
+        raise ValueError("JavaScript tracing requires an explicit interaction plan")
     stamp = now()
     slug = re.sub(r"[^a-zA-Z0-9.-]", "-", urlsplit(url).hostname or "reference")
     run = output / (slug + "-" + hashlib.sha256(url.encode()).hexdigest()[:8] + "-" + re.sub(r"\D", "", stamp))
@@ -55,6 +59,7 @@ def capture(browser, url, output, viewports, selectors=(), hover=(), focus=(), t
               "errors": [], "limitations": list(LIMITATIONS), "engine": "chromium",
               "browser_version": browser.version}
     states = [("default", None, None)] + [("hover", s, "hover") for s in hover] + [("focus", s, "focus") for s in focus]
+    states += [("scenario:" + scenario["name"], None, scenario) for scenario in scenarios]
     probe = PROBE.read_text(encoding="utf-8")
     for size in viewports:
         for motion in ("no-preference", "reduce"):
@@ -63,6 +68,11 @@ def capture(browser, url, output, viewports, selectors=(), hover=(), focus=(), t
                 page = context.new_page()
                 page.set_default_timeout(timeout)
                 for index, (state, selector, action) in enumerate(states):
+                    if isinstance(action, dict):
+                        context.close()
+                        context = browser.new_context(viewport=size, reduced_motion=motion, service_workers="block")
+                        page = context.new_page()
+                        page.set_default_timeout(timeout)
                     console_errors, resources = [], []
                     on_error = lambda error: console_errors.append(str(error)[:600]) if len(console_errors) < 100 else None
                     on_console = lambda msg: on_error(msg.text) if msg.type == "error" else None
@@ -83,10 +93,17 @@ def capture(browser, url, output, viewports, selectors=(), hover=(), focus=(), t
                             report["limitations"].append("Some resources did not finish loading within the bounded wait.")
                         page.evaluate("""() => Promise.race([document.fonts.ready, new Promise(resolve => setTimeout(resolve, 1200))])
                           .then(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))""")
-                        if action:
+                        interaction = None
+                        if isinstance(action, dict):
+                            interaction = trace_scenario(page, action, run, "%dx%d-%s-%d" % (size["width"], size["height"], motion, index), trace_js)
+                        elif action:
                             getattr(page.locator(selector).first, action)()
                         shot = page.evaluate(probe, {"selectors": list(selectors), "limit": 100})
                         shot["state"] = state + (":" + selector if selector else "")
+                        if interaction is not None:
+                            shot["interaction_trace"] = interaction
+                            if not interaction["passed"]:
+                                report["errors"].append({"viewport": size, "motion": motion, "state": state, "error": "Interaction action or expectation failed; inspect interaction_trace."})
                         shot["console_errors"] = console_errors
                         shot["resources"] = resources
                         image = "%dx%d-%s-%d.png" % (size["width"], size["height"], motion, index)
@@ -136,6 +153,8 @@ def main():
     parser.add_argument("--selector", action="append", default=[], help="Representative CSS selector; repeat as needed")
     parser.add_argument("--hover", action="append", default=[])
     parser.add_argument("--focus", action="append", default=[])
+    parser.add_argument("--interactions", type=Path, help="Explicit version 1 interaction plan JSON")
+    parser.add_argument("--trace-js", action="store_true", help="Collect bounded executed JS ranges and listener locations during planned actions")
     parser.add_argument("--wait-for", help="Wait for a visible CSS selector after navigation")
     parser.add_argument("--timeout", type=int, default=15000, help="Navigation/action timeout in milliseconds")
     parser.add_argument("--keyboard-steps", type=int, default=8)
@@ -147,6 +166,11 @@ def main():
         parser.error("timeout must be 1..60000 and keyboard-steps must be 0..30")
     for url in args.urls:
         canonical_url(url)
+    plan = json.loads(args.interactions.read_text(encoding="utf-8")) if args.interactions else None
+    if plan is not None:
+        validate_plan(plan)
+    if args.trace_js and plan is None:
+        parser.error("--trace-js requires --interactions")
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
@@ -159,7 +183,7 @@ def main():
             for url in args.urls:
                 report = capture(browser, url, args.output,
                                  args.viewport or [{"width": 1440, "height": 900}, {"width": 390, "height": 844}],
-                                 args.selector, args.hover, args.focus, args.timeout, args.wait_for, args.keyboard_steps)
+                                 args.selector, args.hover, args.focus, args.timeout, args.wait_for, args.keyboard_steps, plan, args.trace_js)
                 summary = {"url": url, "status": report["status"], "report": report["report_path"],
                            "snapshots": len(report["snapshots"]), "quality_counts": report["quality_counts"],
                            "memory_saved": False, "capture_errors": len(report["errors"])}

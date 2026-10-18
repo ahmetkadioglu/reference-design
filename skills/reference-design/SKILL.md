@@ -1,6 +1,6 @@
 ---
 name: reference-design
-description: Analyze user-provided reference websites visually and technically, save findings to persistent reference memory, and build interfaces from that memory and the user's design brief. Use for learning or managing references, preserving project design systems, creating websites, apps, pages, components, redesigns, briefs or implementation prompts from new or saved references, and auditing or polishing reference-driven interfaces. Honor analysis-only and prompt-only requests. Do not use for unrelated frontend bug fixes or page-text summaries.
+description: Analyze user-provided reference websites visually and technically, trace requested UI behavior, save findings and reviewed design mechanisms, and build interfaces from that memory and the user's brief. Use for learning or managing references, reusing design mechanisms, preserving project design systems, creating websites, apps, pages, components, redesigns, briefs or implementation prompts, auditing or polishing reference-driven interfaces, and evaluating generated designs. Honor analysis-only and prompt-only requests. Do not use for unrelated frontend bug fixes or page-text summaries.
 ---
 
 # Reference Design
@@ -16,6 +16,7 @@ Read [the reference memory workflow](references/reference-memory.md) at the star
 - **Combined task:** Inspect and save new references first, then select appropriate records from both the existing and new collection.
 - Treat reference intake as authorization to save the supplied design references. Do not turn every navigation or documentation link discovered during inspection into a new reference.
 - Find records by site name, URL, product type, visual style, component, or implementation technique. Load shortlisted details rather than the entire store into context.
+- For reusable implementation patterns, also read [the mechanism workflow](references/mechanisms.md). Search reviewed mechanisms before rebuilding an already learned effect; source records and the explicit brief remain authoritative.
 - Save findings, evidence, inspection dates, user preferences, and access limitations. Update an existing URL's record and preserve its history.
 - Complete the environment's durable-save step before reporting a persistent save. Report failed writes accurately. Follow the memory guide for storage and synchronization; do not automatically publish personal reference records to the skill's GitHub distribution repository.
 
@@ -33,6 +34,7 @@ Read [the reference memory workflow](references/reference-memory.md) at the star
 Read [the inspection guide](references/inspection.md). For URLs or code, also read [the implementation inspection guide](references/implementation-inspection.md). For automated URL capture or working-interface checks, read [the browser capture guide](references/browser-capture.md). Match inspection depth to the requested scope.
 
 - When host rules permit standalone browser execution and dependencies exist, use `scripts/capture_reference.py` to capture relevant viewports, styles, and states. Import runtime facts with `--memory-root` or the memory helper's `import-capture` command.
+- For requested menus, tabs, dialogs, and scroll effects, read [the interaction tracing guide](references/interactions.md) and supply an explicit plan. `--trace-js` adds bounded listener locations and executed JavaScript ranges to before/after DOM/style evidence. Review these together; execution during an action window does not alone prove causality or expose framework internals.
 - Review screenshots and relevant source before enriching a capture into an analyzed reference. A capture remains partial; the tool does not trace all JavaScript or establish original architecture.
 - If standalone execution is unavailable or the host requires its own browser, use the permitted inspection tools and record limitations. Do not bypass host rules to run the helper.
 
@@ -56,6 +58,7 @@ Read [the inspection guide](references/inspection.md). For URLs or code, also re
 - Inspect repeated component and state patterns. Explain which CSS/JS mechanism produces the menu, hover, or scroll effect. Support framework/library identification with evidence.
 - When an accessible source repository is provided, read relevant components, styles, tokens, dependency manifests, and directory responsibilities. Do not infer original framework boundaries, source folders, or server code from compiled JavaScript or the DOM.
 - Connect each important feature: visible result → element/selector/file → rule or behavior → mechanism → target-project adaptation. Label visual estimates, code declarations, runtime verification, and source-code findings separately.
+- Extract useful capture candidates with `scripts/mechanism_memory.py extract`. Review, enrich, and save supported mechanisms for later retrieval; automatic drafts are not learned recipes.
 - With screenshots only, present implementation explanations as proposals. With code but no rendering capability, report source findings without claiming the resulting appearance or interaction was tested.
 
 ## 3. Turn evidence into implementation decisions
@@ -95,6 +98,7 @@ Read [the inspection guide](references/inspection.md). For URLs or code, also re
 Read [the visual review checklist](references/visual-review.md) before finishing.
 
 - For audit, critique, or polish requests related to reference-driven work, also read [the quality review guide](references/quality-review.md). Keep audit-only work within reporting scope.
+- When comparing actual design outcomes or evaluating a skill revision, read [the blinded evaluation workflow](references/design-evaluation.md). Build from equal inputs, obtain an independent screenshot review, and retain unfavorable or inconclusive results. Do not infer design quality from runtime test success.
 
 - When the application can run, inspect its rendered output at approximately 1440 px desktop and 390 px mobile widths, plus the actual target device when relevant.
 - Compare against both the explicit brief and selected reference principles. Preserve differences the user intentionally requested.

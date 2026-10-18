@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "skills/reference-design/scripts"))
 import capture_reference as collector
 import reference_memory as memory
+import mechanism_memory as mechanisms
 
 
 @unittest.skipUnless(os.environ.get("REFERENCE_DESIGN_BROWSER_TESTS") == "1", "Set REFERENCE_DESIGN_BROWSER_TESTS=1 with Playwright Chromium installed")
@@ -95,6 +96,51 @@ class BrowserTests(unittest.TestCase):
             records = memory.load(root / "memory")["references"]
             self.assertEqual(len(records), 2)
             self.assertTrue(any("HTTP 404" in item for r in records for item in r["limitations"]))
+
+    def test_interaction_chain_and_extracted_mechanisms(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            plan = json.loads((ROOT / 'tests/fixtures/interactions.json').read_text())
+            report = collector.capture(self.browser, self.base + 'interactive.html', root,
+                [{"width": 390, "height": 844}], keyboard_steps=0, interaction_plan=plan, trace_js=True)
+            self.assertFalse(report['errors'], report['errors'])
+            traces = [s['interaction_trace'] for s in report['snapshots'] if 'interaction_trace' in s]
+            self.assertEqual(len(traces), 8)
+            self.assertTrue(all(t['passed'] for t in traces))
+            menu = next(t for t in traces if t['name'] == 'menu-open')['steps'][0]
+            self.assertTrue(any(c['selector'] == '#menu-toggle' and 'aria-expanded' in c['changes'].get('attributes', {}) for c in menu['changes']))
+            self.assertTrue(any(c['selector'] == '#menu' and c['changes'].get('visible', {}).get('after') is True for c in menu['changes']))
+            self.assertTrue(any(e['type'] == 'click' for e in menu['observations']['events']))
+            self.assertTrue(any(m['attribute'] == 'hidden' for m in menu['observations']['mutations']))
+            function = next(f for f in menu['executed_functions'] if f['function'] == 'toggleMenu')
+            self.assertEqual(function['line'], 2)
+            self.assertTrue(function['source'].endswith('/interactive.js'))
+            self.assertIn("trigger.setAttribute", function['snippet'])
+            self.assertTrue(any(l['source'].endswith('/interactive.js') for l in menu['listener_candidates']))
+            drafts = mechanisms.extract(report)
+            self.assertTrue({'surface', 'typography', 'interaction'} <= {d['kind'] for d in drafts})
+            self.assertTrue(all(d['status'] == 'draft' for d in drafts))
+            memory.write_patches(root / 'memory', [], capture=report)
+            mechanisms.upsert(root / 'memory', drafts)
+            self.assertFalse(mechanisms.search(mechanisms.load(root / 'memory')['mechanisms'], 'surface'))
+            self.assertTrue(mechanisms.search(mechanisms.load(root / 'memory')['mechanisms'], 'surface', include_drafts=True))
+
+    def test_failed_expectation_is_preserved_and_cannot_be_a_learned_transition(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            plan = {'version': 1, 'scenarios': [{'name': 'wrong-menu-expectation', 'observe': ['#menu'],
+                'steps': [{'action': 'click', 'selector': '#menu-toggle'}],
+                'expect': [{'selector': '#menu', 'visible': False}]}]}
+            report = collector.capture(self.browser, self.base + 'interactive.html', root,
+                [{'width': 390, 'height': 844}], keyboard_steps=0, interaction_plan=plan)
+            self.assertTrue(report['errors'])
+            traces = [s['interaction_trace'] for s in report['snapshots'] if 'interaction_trace' in s]
+            self.assertTrue(all(not t['passed'] for t in traces))
+            self.assertTrue(all(t['steps'][0]['changes'] for t in traces))
+            self.assertFalse(any(d['kind'] == 'interaction' for d in mechanisms.extract(report)))
+            with self.assertRaises(ValueError):
+                collector.capture(self.browser, self.base + 'interactive.html', root,
+                    [{'width': 390, 'height': 844}], keyboard_steps=0, trace_js=True)
 
 
 if __name__ == "__main__":

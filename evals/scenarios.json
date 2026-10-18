@@ -24,6 +24,24 @@
         "Use $reference-design to audit the supplied running local page at desktop and mobile widths. Report issues only."
       ],
       "review": ["Overflow and missing labels are identified with locations", "Heuristic warnings are separated from confirmed observations", "Reduced-motion and keyboard coverage limits are accurate", "Audit-only scope is respected", "No claim of complete accessibility conformance"]
+    },
+    {
+      "id": "interaction-to-mechanism",
+      "artifacts": ["tests/fixtures/interactive.html", "tests/fixtures/interactive.js", "tests/fixtures/interactions.json"],
+      "turns": [
+        "Use $reference-design. Analyze the supplied local reference's menu, tab, dialog, and scroll states. Save reusable mechanisms with their source evidence and limits. Do not create a new website.",
+        "Find a reviewed mechanism suitable for a new product's collapsible navigation. Explain the adaptation without treating the source framework as a requirement."
+      ],
+      "review": ["Configured actions and observed state changes remain distinct from causal conclusions", "Executed-code evidence includes actual source locations", "Failed expectations remain visible", "Automatic mechanism drafts require review before reuse", "Sources and revision history remain linked", "Saved recipes respect the new product's constraints"]
+    },
+    {
+      "id": "blind-output-comparison",
+      "artifacts": ["evals/examples/morrow/brief.md"],
+      "turns": [
+        "Prepare an equal-input design comparison from the supplied output captures. Keep condition labels outside the reviewer package and obtain an independent screenshot judgment.",
+        "Summarize the independent judgment with criterion evidence, including ties, losses, and limitations."
+      ],
+      "review": ["Inputs, viewport/state sets, and browser versions match", "The reviewer receives no condition mapping or prior desired winner", "Preferences cite actual screenshot pair IDs", "Missing or modified artifacts are rejected", "Single-case findings are not generalized into a quality guarantee"]
     }
   ]
 }

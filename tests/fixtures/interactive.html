@@ -1,0 +1,19 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Interactive reference</title>
+<style>
+* { box-sizing:border-box; } body { margin:0; color:#172033; background:#f8fafc; font:18px/1.5 sans-serif; }
+header { position:sticky; top:0; background:white; padding:16px; z-index:5; } header[data-scrolled=true] { background:#dbeafe; }
+main { max-width:1080px; margin:auto; padding:24px; min-height:1800px; } button { min-height:48px; padding:12px 20px; }
+button:focus-visible { outline:3px solid #2563eb; outline-offset:3px; } h1 { font-size:clamp(36px,5vw,64px); }
+.cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; }.card { position:relative; isolation:isolate; padding:24px; background:#fffdf9; border:1px solid #ccd2de; border-radius:24px; }
+.card::before { content:""; position:absolute; inset:0; background-image:url(noise.svg); opacity:.04; z-index:-1; pointer-events:none; }
+#menu:not([hidden]) { display:grid; padding:16px; gap:12px; } [hidden] { display:none!important; } [role=tab][aria-selected=true] { background:#2563eb; color:white; }
+dialog { border:1px solid #ccd2de; border-radius:20px; padding:24px; } dialog::backdrop { background:#17203366; }
+@media(max-width:760px) { .cards { grid-template-columns:1fr; } }
+</style></head><body>
+<header id="header"><button id="menu-toggle" type="button" aria-expanded="false" aria-controls="menu">Menu</button><nav id="menu" hidden><a href="#sessions">Sessions</a><a href="#details">Details</a></nav></header>
+<main><h1>Plan your next session.</h1><div class="cards"><article class="card"><h2>Session details</h2>
+<div role="tablist" aria-label="Session information"><button id="tab-one" type="button" role="tab" aria-selected="true" aria-controls="panel-one">Overview</button><button id="tab-two" type="button" role="tab" aria-selected="false" aria-controls="panel-two">Availability</button></div>
+<div id="panel-one" role="tabpanel">Choose a service.</div><div id="panel-two" role="tabpanel" hidden>Monday at 10:00.</div></article>
+<article class="card"><h2>Booking guide</h2><button id="open-dialog" type="button">Read the guide</button></article></div>
+<dialog id="dialog" aria-labelledby="dialog-title"><h2 id="dialog-title">How booking works</h2><p>Select a service and an available time.</p><button id="close-dialog" type="button">Close</button></dialog></main>
+<script src="interactive.js"></script></body></html>

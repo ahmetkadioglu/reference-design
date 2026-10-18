@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8fafc">
+  <meta name="description" content="Find the right specialist, choose a time, and keep your day moving with Morrow.">
+  <title>Morrow — A little time for you</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #14213d;
+      --muted: #5c687c;
+      --blue: #2563eb;
+      --blue-dark: #1d4ed8;
+      --page: #f8fafc;
+      --paper: #fffdf9;
+      --line: #d5dbe5;
+      --soft-blue: #edf3ff;
+      --radius: 24px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+    body { margin: 0; background: var(--page); color: var(--ink); font: 16px/1.5 Arial, Helvetica, sans-serif; -webkit-font-smoothing: antialiased; }
+    button, select, input { font: inherit; }
+    button, a, select, summary, label { -webkit-tap-highlight-color: transparent; }
+    a { color: inherit; text-decoration: none; }
+    button, select, summary { cursor: pointer; }
+    button { color: inherit; }
+    h1, h2, h3, p { margin: 0; }
+    button, a, select, summary, input { touch-action: manipulation; }
+    :focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+    .wrap { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
+    .skip { position: fixed; top: 10px; left: 10px; z-index: 10; background: var(--ink); color: white; padding: 12px 18px; border-radius: 8px; transform: translateY(-150%); }
+    .skip:focus { transform: translateY(0); }
+    .site-header { min-height: 100px; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: 26px; font-weight: 750; letter-spacing: -1.2px; flex-shrink: 0; }
+    .brand-icon { width: 30px; height: 30px; color: var(--blue); }
+    .nav { display: flex; align-items: center; justify-content: space-between; flex: 1; gap: 28px; }
+    .nav-links, .nav-actions { display: flex; align-items: center; gap: 28px; }
+    .nav-links { margin-inline: auto; }
+    .nav a, .sign-in { font-size: 14px; font-weight: 600; }
+    .nav-links a { padding: 12px 0; color: var(--muted); }
+    .nav-links a:hover { color: var(--blue); }
+    .sign-in { background: transparent; padding: 12px 0; border: 0; }
+    .sign-in:hover { color: var(--blue); }
+    .button { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 14px; padding: 12px 21px; border: 1px solid transparent; border-radius: 10px; background: var(--blue); color: white; font-size: 14px; line-height: 1.5; font-weight: 650; transition: background .16s, transform .16s; }
+    .button:hover { background: var(--blue-dark); transform: translateY(-2px); }
+    .button svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .nav .button { min-height: 44px; padding-inline: 18px; }
+    .menu-toggle { display: none; }
+    .hero { display: grid; grid-template-columns: minmax(0, 1fr) 285px; gap: 40px; align-items: end; padding: 49px 0 47px; }
+    .eyebrow { display: flex; align-items: center; gap: 10px; color: var(--blue); font-size: 11px; font-weight: 750; letter-spacing: 1.6px; line-height: 1.5; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 24px; height: 2px; background: currentColor; }
+    h1 { max-width: 790px; margin-top: 19px; font-size: clamp(44px, 4.8vw, 68px); line-height: 1.055; letter-spacing: -3.5px; font-weight: 750; }
+    h1 span { display: block; }
+    .hero-copy { padding-bottom: 5px; }
+    .hero-copy p { color: var(--muted); font-size: 17px; line-height: 1.65; }
+    .hero-copy .button { margin-top: 22px; }
+    .booking { scroll-margin-top: 28px; }
+    .booking-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .booking-top h2 { font-size: 14px; font-weight: 650; }
+    .booking-top p { color: var(--muted); font-size: 12px; display: flex; align-items: center; gap: 7px; }
+    .booking-top p::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--blue); }
+    .booking-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 24px; align-items: stretch; }
+    .paper { position: relative; isolation: isolate; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); }
+    .paper::before { content: ""; position: absolute; z-index: -1; inset: 0; border-radius: inherit; background-image: url("noise.svg"); opacity: .04; pointer-events: none; }
+    .booking-card { padding: 28px 30px 30px; }
+    .card-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 23px; }
+    .card-heading h3 { font-size: 23px; line-height: 1.2; letter-spacing: -.65px; }
+    .card-heading svg { width: 21px; height: 21px; color: var(--blue); flex-shrink: 0; }
+    label.field-label, legend { padding: 0; color: var(--muted); font-size: 12px; font-weight: 650; }
+    label.field-label { display: block; margin-bottom: 8px; }
+    .select-wrap { position: relative; }
+    .select-wrap svg { position: absolute; pointer-events: none; width: 18px; height: 18px; right: 15px; top: 17px; }
+    select { appearance: none; display: block; width: 100%; min-height: 52px; border: 1px solid var(--line); border-radius: 9px; padding: 12px 42px 12px 15px; color: var(--ink); background: #fffefa; font-size: 15px; }
+    select:hover { border-color: #8a9bb6; }
+    fieldset { min-inline-size: 0; border: 0; margin: 19px 0 0; padding: 0; }
+    legend { margin-bottom: 8px; }
+    .choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .choice { position: relative; display: block; }
+    .choice input { position: absolute; left: 50%; top: 50%; width: 1px; height: 1px; opacity: 0; }
+    .choice span { min-height: 47px; display: flex; align-items: center; justify-content: center; padding: 10px 7px; border: 1px solid var(--line); border-radius: 9px; background: #fffefa; font-size: 14px; line-height: 1.2; font-weight: 500; cursor: pointer; transition: border-color .16s, background .16s, color .16s; }
+    .choice span:hover { border-color: #8a9bb6; }
+    .choice input:checked + span { color: var(--blue-dark); background: var(--soft-blue); border-color: var(--blue); font-weight: 650; box-shadow: inset 0 0 0 .5px var(--blue); }
+    .choice input:focus-visible + span { outline: 3px solid var(--ink); outline-offset: 3px; }
+    .times .choice input:checked + span::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; margin-right: 7px; }
+    .preview-card { padding: 28px 30px 26px; display: flex; flex-direction: column; }
+    .preview-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .preview-top h3 { font-size: 14px; font-weight: 650; }
+    .badge { color: var(--muted); border: 1px solid var(--line); border-radius: 100px; padding: 3px 9px; font-size: 10px; font-weight: 650; letter-spacing: 1px; }
+    .session { display: flex; align-items: center; gap: 15px; padding: 26px 0 22px; }
+    .session-icon { display: grid; place-items: center; width: 52px; height: 52px; flex-shrink: 0; border-radius: 15px; background: var(--soft-blue); color: var(--blue); }
+    .session-icon svg { width: 25px; height: 25px; }
+    .session-name { font-size: 26px; line-height: 1.2; font-weight: 700; letter-spacing: -.7px; }
+    .session-caption { color: var(--muted); font-size: 12px; margin-top: 4px; }
+    .session-details { display: grid; grid-template-columns: 1fr 1fr; padding: 17px 0 20px; border-block: 1px solid var(--line); margin: 0 0 23px; gap: 20px; }
+    .session-details div + div { padding-left: 24px; border-left: 1px solid var(--line); }
+    .session-details dt { color: var(--muted); font-size: 11px; margin-bottom: 5px; }
+    .session-details dd { margin: 0; font-size: 16px; font-weight: 650; }
+    .preview-card .button { width: 100%; margin-top: auto; }
+    .demo-note { margin-top: 11px; color: var(--muted); font-size: 11px; line-height: 1.5; text-align: center; }
+    .demo-result { margin-top: 13px; padding: 10px 12px; border-radius: 8px; color: var(--ink); background: var(--soft-blue); font-size: 12px; line-height: 1.55; }
+    [hidden] { display: none !important; }
+    .how { padding: 62px 0 55px; }
+    .section-top { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; margin-bottom: 27px; }
+    .section-top h2 { font-size: 28px; line-height: 1.2; letter-spacing: -.9px; }
+    .section-top p { color: var(--muted); font-size: 13px; }
+    .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; list-style: none; padding: 0; margin: 0; }
+    .steps li { padding-top: 17px; border-top: 1px solid var(--line); }
+    .step-number { display: block; margin-bottom: 15px; font-size: 11px; color: var(--blue); font-weight: 700; letter-spacing: 1px; }
+    .steps h3 { font-size: 18px; letter-spacing: -.4px; margin-bottom: 6px; }
+    .steps p { color: var(--muted); font-size: 13px; line-height: 1.65; max-width: 290px; }
+    .faq { border-top: 1px solid var(--line); padding: 42px 0 48px; display: grid; grid-template-columns: .8fr 1.2fr; gap: 60px; }
+    .faq h2 { font-size: 28px; line-height: 1.2; letter-spacing: -.9px; }
+    .faq-intro p { margin-top: 8px; color: var(--muted); font-size: 13px; }
+    details { border-bottom: 1px solid var(--line); }
+    details:first-child { border-top: 1px solid var(--line); }
+    summary { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 59px; padding: 16px 1px; font-size: 14px; font-weight: 650; list-style: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; font-size: 22px; font-weight: 400; line-height: 1; color: var(--blue); }
+    details[open] summary::after { content: "−"; }
+    details p { padding: 0 30px 18px 1px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .site-footer { border-top: 1px solid var(--line); padding: 24px 0 28px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .site-footer .brand { font-size: 20px; letter-spacing: -.8px; }
+    .site-footer .brand-icon { width: 23px; height: 23px; }
+    .site-footer p { color: var(--muted); font-size: 11px; }
+    dialog { width: min(440px, calc(100% - 40px)); padding: 30px; border: 1px solid var(--line); border-radius: 20px; color: var(--ink); background: var(--paper); box-shadow: 0 20px 80px #14213d26; }
+    dialog::backdrop { background: #14213d66; }
+    dialog h2 { font-size: 26px; letter-spacing: -.8px; margin-bottom: 12px; }
+    dialog p { font-size: 15px; line-height: 1.7; color: var(--muted); margin-bottom: 24px; }
+    dialog .button { width: 100%; }
+    @media (max-width: 1050px) {
+      .nav-links, .nav-actions { gap: 19px; }
+      .hero { grid-template-columns: minmax(0, 1fr) 260px; gap: 24px; }
+      h1 { font-size: 58px; letter-spacing: -2.8px; }
+      .booking-card, .preview-card { padding-inline: 25px; }
+    }
+    @media (max-width: 760px) {
+      html { scroll-padding-top: 20px; }
+      .wrap { width: calc(100% - 40px); }
+      .site-header { min-height: 82px; position: relative; gap: 15px; }
+      .brand { font-size: 25px; }
+      .brand-icon { width: 28px; height: 28px; }
+      .menu-toggle { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 8px 0 8px 12px; border: 0; background: transparent; font-size: 13px; font-weight: 600; }
+      .menu-toggle svg { width: 21px; height: 21px; }
+      .menu-toggle[aria-expanded="true"] .menu-lines { display: none; }
+      .menu-toggle[aria-expanded="false"] .menu-close { display: none; }
+      .nav { position: absolute; z-index: 5; top: 73px; left: 0; right: 0; display: none; border: 1px solid var(--line); border-radius: 16px; padding: 14px 20px 20px; background: var(--paper); box-shadow: 0 15px 35px #14213d14; }
+      .nav.is-open { display: block; }
+      .nav-links, .nav-actions { display: flex; flex-direction: column; align-items: stretch; gap: 0; }
+      .nav-links { margin: 0; }
+      .nav-links a { padding: 13px 0; font-size: 15px; }
+      .nav-actions { border-top: 1px solid var(--line); margin-top: 6px; padding-top: 8px; }
+      .sign-in { text-align: left; padding: 13px 0; font-size: 15px; }
+      .nav .button { margin-top: 7px; }
+      .hero { display: block; padding: 31px 0 35px; }
+      .eyebrow { font-size: 10px; letter-spacing: 1.3px; gap: 8px; }
+      .eyebrow::before { width: 18px; }
+      h1 { max-width: 550px; margin-top: 17px; font-size: clamp(40px, 8vw, 58px); line-height: 1.055; letter-spacing: -2.2px; }
+      h1 span { display: inline; }
+      .hero-copy { padding: 0; margin-top: 23px; }
+      .hero-copy p { max-width: 410px; font-size: 16px; line-height: 1.65; }
+      .hero-copy .button { margin-top: 22px; }
+      .booking-top { margin-bottom: 13px; }
+      .booking-top h2 { font-size: 13px; }
+      .booking-top p { font-size: 10px; }
+      .booking-grid { grid-template-columns: 1fr; gap: 18px; }
+      .booking-card, .preview-card { padding: 25px 24px; }
+      .card-heading { margin-bottom: 23px; }
+      .card-heading h3 { font-size: 22px; }
+      .choice span { font-size: 13px; min-height: 48px; }
+      .preview-card { padding-block: 24px; }
+      .session { padding: 25px 0 23px; }
+      .session-name { font-size: 25px; }
+      .session-details { margin-bottom: 22px; }
+      .how { padding: 43px 0 39px; }
+      .section-top { display: block; margin-bottom: 23px; }
+      .section-top h2, .faq h2 { font-size: 26px; letter-spacing: -.8px; }
+      .section-top p { margin-top: 8px; }
+      .steps { grid-template-columns: 1fr; gap: 23px; }
+      .steps li { display: grid; grid-template-columns: 32px 1fr; column-gap: 12px; padding-top: 18px; }
+      .step-number { grid-row: 1 / 3; margin-top: 4px; }
+      .steps h3 { font-size: 18px; }
+      .steps p { max-width: 100%; }
+      .faq { display: block; padding: 33px 0 39px; }
+      .faq-intro { margin-bottom: 24px; }
+      summary { font-size: 14px; }
+      .site-footer { padding-block: 22px; align-items: flex-start; }
+      .site-footer p { max-width: 150px; text-align: right; font-size: 10px; padding-top: 2px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+      .button:hover { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header wrap">
+    <a class="brand" href="#" aria-label="Morrow home">
+      <svg class="brand-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M5 25V15a6 6 0 0 1 12 0v10M17 25V15a5 5 0 0 1 10 0v10" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/><path d="M6 6.5 4.5 5M16 4V2M25 6.5 26.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      Morrow
+    </a>
+    <button class="menu-toggle" type="button" aria-controls="navigation" aria-expanded="false">
+      <span>Menu</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><g class="menu-lines"><path d="M3 7h18M3 12h18M3 17h18"/></g><g class="menu-close"><path d="m5 5 14 14M19 5 5 19"/></g></svg>
+    </button>
+    <nav class="nav" id="navigation" aria-label="Main navigation">
+      <div class="nav-links"><a href="#features">Features</a><a href="#specialists" data-focus-service>Specialists</a><a href="#how-it-works">How it works</a></div>
+      <div class="nav-actions"><button class="sign-in" type="button" data-sign-in>Sign in</button><a class="button" href="#booking" data-focus-service>Book a session</a></div>
+    </nav>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="hero" aria-labelledby="hero-heading">
+      <div>
+        <p class="eyebrow">Your day, a little lighter</p>
+        <h1 id="hero-heading"><span>Your next appointment,</span> <span>beautifully simple.</span></h1>
+      </div>
+      <div class="hero-copy">
+        <p>Find the right specialist, choose a time, and keep your day moving.</p>
+        <a class="button" href="#booking" data-focus-service>Find a session <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a>
+      </div>
+    </section>
+
+    <section class="booking" id="booking" aria-labelledby="features">
+      <div class="booking-top"><h2 id="features">A little time, just for you.</h2><p>Explore the demo</p></div>
+      <div class="booking-grid">
+        <form class="paper booking-card" id="booking-form" aria-labelledby="booking-heading">
+          <div class="card-heading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 10h18m-13 5h2m4 0h2"/></svg><h3 id="booking-heading">Choose your session</h3></div>
+          <div id="specialists">
+            <label class="field-label" for="service">What can we help with?</label>
+            <div class="select-wrap"><select id="service" name="service"><option>Consultation</option><option>Coaching</option><option>Check-in</option></select><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></div>
+          </div>
+          <fieldset><legend>Choose a day</legend><div class="choices">
+            <label class="choice"><input type="radio" name="day" value="Monday" checked><span>Monday</span></label>
+            <label class="choice"><input type="radio" name="day" value="Tuesday"><span>Tuesday</span></label>
+            <label class="choice"><input type="radio" name="day" value="Wednesday"><span>Wednesday</span></label>
+          </div></fieldset>
+          <fieldset class="times"><legend>Available demo times</legend><div class="choices">
+            <label class="choice"><input type="radio" name="time" value="09:00" checked><span>09:00</span></label>
+            <label class="choice"><input type="radio" name="time" value="11:30"><span>11:30</span></label>
+            <label class="choice"><input type="radio" name="time" value="14:00"><span>14:00</span></label>
+          </div></fieldset>
+        </form>
+        <aside class="paper preview-card" aria-labelledby="preview-heading">
+          <div class="preview-top"><h3 id="preview-heading">Your appointment preview</h3><span class="badge">DEMO</span></div>
+          <div id="appointment-preview" aria-live="polite" aria-atomic="true">
+            <div class="session"><div class="session-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 10h18m-13 5 3 3 5-5"/></svg></div><div><p class="session-name" id="preview-service">Consultation</p><p class="session-caption">Make room for what matters.</p></div></div>
+            <dl class="session-details"><div><dt>Day</dt><dd id="preview-day">Monday</dd></div><div><dt>Time</dt><dd id="preview-time">09:00</dd></div></dl>
+          </div>
+          <button class="button" type="button" id="preview-button">Preview booking <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></button>
+          <p class="demo-note">Take a look. No commitment needed.</p>
+          <p class="demo-result" id="demo-result" role="status" hidden>Demo preview — no appointment has been booked.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="how" id="how-it-works" aria-labelledby="how-heading">
+      <div class="section-top"><h2 id="how-heading">Less back-and-forth. More you.</h2><p>Three simple steps to your next session.</p></div>
+      <ol class="steps">
+        <li><span class="step-number">01 /</span><h3>Choose a service</h3><p>Start with what you need. Find a specialist who fits.</p></li>
+        <li><span class="step-number">02 /</span><h3>Pick a time</h3><p>Choose an opening that works around your day.</p></li>
+        <li><span class="step-number">03 /</span><h3>Confirm your details</h3><p>Review your session before taking the next step.</p></li>
+      </ol>
+    </section>
+
+    <section class="faq" aria-labelledby="faq-heading">
+      <div class="faq-intro"><h2 id="faq-heading">A couple of good questions.</h2><p>A little clarity before you begin.</p></div>
+      <div>
+        <details><summary>Can I reschedule an appointment?</summary><p>Plans change. For a real appointment, check your specialist’s rescheduling policy. Here, you can freely change your day and time to explore the preview.</p></details>
+        <details><summary>Does this demo book a real session?</summary><p>No. All services and time slots are demo choices. Previewing a booking does not reserve an appointment or send any details.</p></details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer wrap">
+    <a class="brand" href="#" aria-label="Morrow home"><svg class="brand-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M5 25V15a6 6 0 0 1 12 0v10M17 25V15a5 5 0 0 1 10 0v10" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/><path d="M6 6.5 4.5 5M16 4V2M25 6.5 26.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Morrow</a>
+    <p>A little time for you. © 2026 Morrow.</p>
+  </footer>
+
+  <dialog id="sign-in-dialog" aria-labelledby="sign-in-heading" aria-describedby="sign-in-description">
+    <h2 id="sign-in-heading">Welcome to Morrow.</h2><p id="sign-in-description">This is a local demo, so account sign-in isn’t connected. You can still explore services and preview your next appointment.</p><form method="dialog"><button class="button" type="submit">Continue exploring</button></form>
+  </dialog>
+  <script>
+    (() => {
+      const menuButton = document.querySelector('.menu-toggle');
+      const nav = document.getElementById('navigation');
+      const service = document.getElementById('service');
+      const form = document.getElementById('booking-form');
+      const result = document.getElementById('demo-result');
+      const dialog = document.getElementById('sign-in-dialog');
+      const mobile = window.matchMedia('(max-width: 760px)');
+      function setMenu(open, returnFocus = false) {
+        menuButton.setAttribute('aria-expanded', String(open));
+        nav.classList.toggle('is-open', open);
+        if (returnFocus) menuButton.focus();
+      }
+      menuButton.addEventListener('click', () => setMenu(menuButton.getAttribute('aria-expanded') !== 'true'));
+      nav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => setMenu(false)));
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && menuButton.getAttribute('aria-expanded') === 'true') setMenu(false, true);
+      });
+      document.addEventListener('click', event => {
+        if (!event.target.closest('.site-header')) setMenu(false);
+      });
+      mobile.addEventListener('change', () => setMenu(false));
+      document.querySelectorAll('[data-focus-service]').forEach(link => link.addEventListener('click', () => {
+        setMenu(false);
+        requestAnimationFrame(() => service.focus({ preventScroll: true }));
+      }));
+      form.addEventListener('submit', event => event.preventDefault());
+      form.addEventListener('change', () => {
+        const values = new FormData(form);
+        document.getElementById('preview-service').textContent = values.get('service');
+        document.getElementById('preview-day').textContent = values.get('day');
+        document.getElementById('preview-time').textContent = values.get('time');
+        result.hidden = true;
+      });
+      document.getElementById('preview-button').addEventListener('click', () => { result.hidden = false; });
+      document.querySelectorAll('[data-sign-in]').forEach(button => button.addEventListener('click', () => {
+        setMenu(false);
+        dialog.showModal();
+      }));
+      dialog.addEventListener('close', () => { if (mobile.matches) menuButton.focus(); });
+    })();
+  </script>
+</body>
+</html>

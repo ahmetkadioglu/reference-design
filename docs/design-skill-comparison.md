@@ -6,7 +6,7 @@ This is a source-based capability comparison, not a benchmark of generated desig
 
 Reference Design combines user-supplied reference intake, visual and accessible implementation inspection, persistent reference records, and later interface creation from that collection. Records preserve evidence, access limitations, user preferences, and revision history. Explicit briefs and reference roles take priority over a preset aesthetic.
 
-The first implementation upgrade adds optional Playwright evidence capture and basic UI checks, field-weighted BM25 retrieval with facets, a project design document with page overrides/CSS export, and published regression/browser fixture checks. Agent visual review, deeper JavaScript/source inspection, and host permissions remain necessary. Personal memory and captures are excluded from the public distribution. Peer source revisions below remain the original reviewed snapshots; this is not a fresh benchmark of those projects.
+The current implementation includes optional Playwright capture and basic UI checks, explicit interaction plans with DOM/style changes and bounded executed-JavaScript evidence, field-weighted BM25 retrieval, a reviewed mechanism library, project/page design decisions, and a blinded screenshot comparison workflow. Agent source interpretation, independent visual review, and host permissions remain necessary. Personal memory and captures are excluded from public distribution. Peer source revisions below remain the original reviewed snapshots; this is not a fresh benchmark of those projects.
 
 ## Peer comparison
 
@@ -31,10 +31,10 @@ These are the focus of our implementation, not a claim of exclusivity. Impeccabl
 
 | Original priority | First upgrade | Remaining work |
 | --- | --- | --- |
-| Evidence capture | Optional Chromium adapter, desktop/mobile and reduced-motion screenshots, representative styles/rules, hover/focus states, basic checks, and memory import | Deeper interaction/source tracing, broader accessibility measurement, more host adapters, and reliable visual comparison |
+| Evidence capture | Chromium adapter, desktop/mobile and reduced-motion views, representative styles/rules, explicit menu/tab/dialog/scroll plans, DOM/style deltas, executed-code excerpts, and memory import | Deeper source/causality review, broader accessibility measurement, and more host adapters |
 | Project design memory | Atomic project document, master/page inheritance, reference roles, and CSS token export | Existing-token synchronization, reusable component extraction, and drift detection |
-| Retrieval | Field-weighted BM25, aliases, domain/component/technique facets, match explanations, and legacy-store compatibility | Larger retrieval evaluations and an optional licensed starter catalog; semantic retrieval only if justified |
-| Evaluation and review | Published temporary-store regressions, local browser fixtures, CI configuration, and audit/critique/polish guidance | Repeated baseline-versus-skill visual evaluations, broader real-world fixtures, and performance measurements |
+| Retrieval | Field-weighted BM25, facets, explanations, legacy-store compatibility, and source-linked reviewed mechanism records with draft extraction | Larger retrieval evaluations and an optional licensed starter catalog; semantic retrieval only if justified |
+| Evaluation and review | Runtime/browser fixtures, CI, review guidance, and blinded equal-input screenshot packages with evidence-based judgment summaries | Repeated comparisons across representative briefs, broader real-world fixtures, and performance measurements |
 
 The next practical step is to exercise intake and creation on real user-supplied references, then prioritize failures observed in that workflow. Importing every peer's aesthetic restrictions would work against explicit user preferences.
 
