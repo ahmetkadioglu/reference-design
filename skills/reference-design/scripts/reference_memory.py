@@ -4,6 +4,7 @@ import argparse
 import copy
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -14,12 +15,14 @@ from datetime import datetime, timezone
 from urllib.parse import unquote, urlsplit, urlunsplit
 
 STATUSES = {"queued", "partial", "analyzed", "unavailable"}
+FACETS = ("domains", "components", "techniques")
 FIELDS = {"url", "title", "tags", "roles", "summary", "status", "visual", "technical",
-          "evidence", "preferences", "limitations", "inspected_at"}
+          "evidence", "preferences", "limitations", "inspected_at", *FACETS}
 TRACKERS = {"fbclid", "gclid", "msclkid"}
-ALIASES = ["card kart kartlar", "grain grainy gren grenli putur puturlu noise", "shadow golge",
-           "booking rezervasyon randevu", "glass cam glassmorphism",
-           "light acik", "dark koyu", "dashboard panel", "gradient degrade"]
+ALIASES = ["card cards kart kartlar", "grain grainy gren grenli putur puturlu noise", "shadow shadows golge",
+           "booking bookings appointment appointments rezervasyon randevu", "glass cam glassmorphism",
+           "light acik", "dark koyu", "dashboard dashboards panel", "gradient gradients degrade",
+           "typography tipografi", "navigation navbar navigasyon", "form forms formlar"]
 
 
 def now():
@@ -62,8 +65,9 @@ def check_record(record):
     for key in ("title", "summary"):
         if not isinstance(record.get(key), str):
             raise ValueError(key + " must be a string")
-    for key in ("tags", "roles", "limitations"):
-        if not isinstance(record.get(key), list) or not all(isinstance(v, str) for v in record[key]):
+    for key in ("tags", "roles", "limitations", *FACETS):
+        values = record.get(key, []) if key in FACETS else record.get(key)
+        if not isinstance(values, list) or not all(isinstance(v, str) for v in values):
             raise ValueError(key + " must be a list of strings")
     for key in ("visual", "technical", "preferences"):
         if not isinstance(record.get(key), dict):
@@ -123,14 +127,15 @@ def apply_patch(data, patch):
     record = copy.deepcopy(previous) if previous else {
         "id": identity, "url": canonical, "canonical_url": canonical, "source_urls": [],
         "title": "", "tags": [], "roles": [], "summary": "", "status": "queued",
+        "domains": [], "components": [], "techniques": [],
         "visual": {}, "technical": {}, "preferences": {}, "evidence": [], "limitations": [],
         "inspected_at": None, "created_at": timestamp, "updated_at": timestamp, "history": []}
     record["source_urls"] = unique(record["source_urls"] + [patch["url"].strip()])
     for key, value in patch.items():
         if key == "url":
             continue
-        if key in {"tags", "roles"} and isinstance(value, list):
-            record[key] = unique(record[key] + value)
+        if key in {"tags", "roles", *FACETS} and isinstance(value, list):
+            record[key] = unique(record.get(key, []) + value)
         elif isinstance(value, dict) and isinstance(record.get(key), dict):
             record[key] = merge_dict(record[key], value)
         else:
@@ -147,7 +152,7 @@ def apply_patch(data, patch):
     return record
 
 
-def write_patches(root, patches):
+def write_patches(root, patches, capture=None):
     root.mkdir(parents=True, exist_ok=True)
     lock = root / ".write-lock"
     try:
@@ -157,6 +162,8 @@ def write_patches(root, patches):
     temp = None
     try:
         data = load(root)
+        if capture is not None:
+            patches = [capture_patch(data, capture)]
         records = [apply_patch(data, patch) for patch in patches]
         with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=root, prefix=".store-", delete=False) as handle:
             temp = Path(handle.name)
@@ -173,31 +180,96 @@ def write_patches(root, patches):
 
 
 def brief(record):
-    return {key: record[key] for key in ("id", "url", "title", "tags", "roles", "summary", "status", "inspected_at", "updated_at")}
+    result = {key: record[key] for key in ("id", "url", "title", "tags", "roles", "summary", "status", "inspected_at", "updated_at")}
+    result.update({key: record.get(key, []) for key in FACETS})
+    return result
+
+
+def tokenize(value):
+    text = unicodedata.normalize("NFKD", value.casefold().replace("ı", "i"))
+    text = "".join(c for c in text if not unicodedata.combining(c))
+    return re.findall(r"[a-z0-9]+", text)
 
 
 def words(value):
-    text = unicodedata.normalize("NFKD", value.casefold().replace("ı", "i"))
-    text = "".join(c for c in text if not unicodedata.combining(c))
-    return set(re.findall(r"[a-z0-9]+", text))
+    return set(tokenize(value))
 
 
-def search(records, query, limit, all_statuses=False):
-    tokens = words(query)
-    for alias in ALIASES:
-        group = words(alias)
-        if tokens & group:
-            tokens |= group
+def terms(value):
+    aliases = {term: tokenize(group)[0] for group in ALIASES for term in tokenize(group)}
+    return [aliases.get(term, term) for term in tokenize(value)]
+
+
+def search(records, query, limit, all_statuses=False, filters=None, explain=False):
+    """Field-weighted BM25, with document frequency over eligible records."""
+    from collections import Counter
+    weights = {"title": 3, "url": 1, "tags": 5, "roles": 5, "summary": 3,
+               "visual": 2, "technical": 2, "preferences": 2,
+               "domains": 5, "components": 5, "techniques": 5}
+    eligible = [r for r in records if all_statuses or r["status"] in {"analyzed", "partial"}]
+    query_terms = set(terms(query))
+    documents = [{key: Counter(terms(json.dumps(r.get(key, []), ensure_ascii=False)))
+                  for key in weights} for r in eligible]
+    averages = {key: sum(sum(doc[key].values()) for doc in documents) / max(1, len(documents))
+                for key in weights}
+    frequencies = {term: sum(any(term in field for field in doc.values()) for doc in documents)
+                   for term in query_terms}
     found = []
-    weights = {"title": 3, "tags": 5, "roles": 5, "summary": 3, "visual": 2, "technical": 2, "preferences": 2}
-    for record in records:
-        if not all_statuses and record["status"] not in {"analyzed", "partial"}:
+    for record, doc in zip(eligible, documents):
+        if any(not any(set(terms(value)) == set(terms(candidate))
+                       for candidate in record.get(key, []) + record.get("tags", []))
+               for key, values in (filters or {}).items() for value in values):
             continue
-        score = sum(weight * len(tokens & words(json.dumps(record[key], ensure_ascii=False))) for key, weight in weights.items())
+        score, matches = 0.0, {}
+        for term in query_terms:
+            tf = sum(weights[key] * field[term] / (0.25 + 0.75 * sum(field.values()) / (averages[key] or 1))
+                     for key, field in doc.items())
+            if tf:
+                idf = math.log(1 + (len(eligible) - frequencies[term] + 0.5) / (frequencies[term] + 0.5))
+                score += idf * tf * 2.2 / (tf + 1.2)
+                matches[term] = [key for key, field in doc.items() if field[term]]
         if score:
-            found.append((score, record))
-    found.sort(key=lambda item: (item[0], item[1]["updated_at"]), reverse=True)
-    return [dict(brief(record), score=score) for score, record in found[:limit]]
+            result = dict(brief(record), score=round(score, 6))
+            if explain:
+                result["matches"] = matches
+            found.append((score, record["updated_at"], record["id"], result))
+    found.sort(key=lambda item: item[:3], reverse=True)
+    return [item[3] for item in found[:limit]]
+
+
+def capture_patch(data, report):
+    """Import capture facts without claiming human visual or source review."""
+    if report.get("capture_version") != 1 or not isinstance(report.get("snapshots"), list):
+        raise ValueError("Expected a version 1 capture report")
+    url = canonical_url(report["url"])
+    if not isinstance(report.get("captured_at"), str):
+        raise ValueError("Capture report needs an ISO captured_at timestamp")
+    datetime.fromisoformat(report["captured_at"].replace("Z", "+00:00"))
+    previous = next((r for r in data["references"] if r["canonical_url"] == url), {})
+    snapshots = report["snapshots"]
+    limitations = report.get("limitations", [])
+    if not isinstance(limitations, list) or not all(isinstance(v, str) for v in limitations):
+        raise ValueError("Capture limitations must be strings")
+    evidence = []
+    for shot in snapshots:
+        if not isinstance(shot, dict) or not isinstance(shot.get("elements"), list):
+            raise ValueError("Capture snapshot needs sampled elements")
+        evidence.append({"kind": "runtime", "source": shot.get("url", url),
+                         "locator": str(shot.get("viewport")) + "/" + str(shot.get("state")) + "/reduced-motion=" + str(bool(shot.get("reduced_motion"))),
+                         "finding": "Captured %d representative elements and computed styles; screenshot capture is not a visual review." % len(shot["elements"])})
+    patch = {"url": url, "status": "partial" if snapshots or previous.get("evidence") else "unavailable",
+             "technical": {"capture": {"captured_at": report.get("captured_at"),
+                                       "report": report.get("report_path"),
+                                       "viewports": [s.get("viewport") for s in snapshots],
+                                       "quality_counts": report.get("quality_counts", {})}},
+             "evidence": unique(previous.get("evidence", []) + evidence),
+             "limitations": unique(previous.get("limitations", []) + limitations +
+                ["Capture attempt: " + json.dumps(error, ensure_ascii=False)[:1200] for error in report.get("errors", [])])}
+    if not previous.get("title"):
+        patch["title"] = report.get("title", "")
+    if snapshots:
+        patch["inspected_at"] = report["captured_at"]
+    return patch
 
 
 def main():
@@ -207,6 +279,8 @@ def main():
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("list")
     sub.add_parser("validate")
+    capture = sub.add_parser("import-capture")
+    capture.add_argument("--file", required=True, help="capture_reference.py report.json")
     upsert = sub.add_parser("upsert")
     upsert.add_argument("--file", default="-", help="JSON object/array; '-' reads stdin")
     get = sub.add_parser("get")
@@ -216,8 +290,14 @@ def main():
     find.add_argument("query")
     find.add_argument("--limit", type=int, default=8)
     find.add_argument("--all-statuses", action="store_true")
+    find.add_argument("--explain", action="store_true")
+    for facet in FACETS:
+        find.add_argument("--" + facet[:-1], action="append", default=[])
     args = parser.parse_args()
-    if args.command == "upsert":
+    if args.command == "import-capture":
+        report = json.loads(Path(args.file).read_text(encoding="utf-8"))
+        output = [brief(record) for record in write_patches(args.root, [], capture=report)]
+    elif args.command == "upsert":
         raw = sys.stdin.read() if args.file == "-" else Path(args.file).read_text(encoding="utf-8")
         patches = json.loads(raw)
         patches = patches if isinstance(patches, list) else [patches]
@@ -234,7 +314,8 @@ def main():
         elif args.command == "search":
             if args.limit < 1:
                 raise ValueError("limit must be positive")
-            output = search(records, args.query, args.limit, args.all_statuses)
+            output = search(records, args.query, args.limit, args.all_statuses,
+                            {key: getattr(args, key[:-1]) for key in FACETS}, args.explain)
         else:
             candidate = canonical_url(args.reference) if args.reference.startswith(("http://", "https://")) else args.reference
             match = next((r for r in records if candidate in {r["id"], r["canonical_url"]}), None)

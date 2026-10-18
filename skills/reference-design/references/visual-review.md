@@ -38,6 +38,8 @@ Resolve structural mismatches before adjusting decorative effects. Evaluate refe
 
 ## Working interface
 
+When permitted, use the optional browser capture quality gate described in [browser-capture.md](browser-capture.md). Verify findings in context and complete the manual checks below; a clean automated report is not a complete pass.
+
 - Render relevant desktop/mobile widths and check overflow, clipping, and overlap.
 - Exercise navigation, menus, buttons, forms, and scoped state changes.
 - Check focus, labels, and touch targets; measure contrast when tools permit.

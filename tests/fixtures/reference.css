@@ -1,0 +1,17 @@
+:root { --accent: #2563eb; --surface: #fffdf9; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 32px; color: #14213d; background: #f8fafc; font: 18px/1.5 sans-serif; }
+main, header { max-width: 1080px; margin: auto; }
+h1 { font-size: clamp(40px, 6vw, 72px); line-height: 1.05; max-width: 800px; }
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.card { position: relative; isolation: isolate; padding: 28px; border: 1px solid #ccd2de; border-radius: 24px; background: var(--surface); }
+.card::before { content: ""; position: absolute; inset: 0; opacity: .04; background-image: url("noise.svg"); pointer-events: none; border-radius: inherit; z-index: -1; }
+button, select { min-height: 48px; padding: 12px; font: inherit; }
+button { color: white; background: var(--accent); border: 2px solid transparent; border-radius: 12px; }
+button:hover { transform: translateY(-2px); }
+button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid #111827; outline-offset: 3px; }
+label { display: block; }
+.animation { width: 20px; height: 20px; animation: pulse 3s infinite; }
+@keyframes pulse { 50% { opacity: .5; } }
+@media (max-width: 760px) { body { padding: 20px; } .cards { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .animation { animation: none; } }

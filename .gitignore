@@ -7,3 +7,7 @@ Thumbs.db
 
 # Reference observations belong to the local installation.
 skills/reference-design/references/memory/
+
+# Private captures and local project design work are not distribution content.
+.reference-design/
+.venv/

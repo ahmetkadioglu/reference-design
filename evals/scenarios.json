@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "scenarios": [
+    {
+      "id": "learn-then-reuse",
+      "artifacts": ["tests/fixtures/reference.html", "tests/fixtures/reference.css", "tests/fixtures/reference.js"],
+      "turns": [
+        "Use $reference-design. The supplied local files are a snapshot of https://booking-reference.test/. Add this reference to memory. I like its card surfaces and heading hierarchy. Only learn it for now.",
+        "Use reference memory to write an implementation prompt for a light-theme appointment homepage with blue accents. Only deliver the prompt."
+      ],
+      "review": ["Every supplied source is accounted for", "Local source evidence is distinguished from rendering and live access", "Reference preferences persist between turns", "No website is created for intake or prompt-only work", "The later prompt uses supported reference mechanisms and the current palette"]
+    },
+    {
+      "id": "project-inheritance",
+      "turns": [
+        "Use $reference-design. In the supplied temporary project, persist a light theme with blue accents and 24px card padding. Give the booking page 32px card padding. The reference https://booking-reference.test/ supplies only the card texture. Export resolved booking-page CSS tokens."
+      ],
+      "review": ["Master decisions and page overrides remain distinct", "The reference role is recorded", "The resolved export retains inherited colors and uses the page padding", "No reference is claimed to have been inspected from its URL alone"]
+    },
+    {
+      "id": "capture-and-audit",
+      "artifacts": ["tests/fixtures/broken.html"],
+      "turns": [
+        "Use $reference-design to audit the supplied running local page at desktop and mobile widths. Report issues only."
+      ],
+      "review": ["Overflow and missing labels are identified with locations", "Heuristic warnings are separated from confirmed observations", "Reduced-motion and keyboard coverage limits are accurate", "Audit-only scope is respected", "No claim of complete accessibility conformance"]
+    }
+  ]
+}

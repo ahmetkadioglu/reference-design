@@ -1,6 +1,6 @@
 ---
 name: reference-design
-description: Analyze user-provided reference websites visually and technically, save findings to persistent reference memory, and build interfaces from that memory and the user's design brief. Use for adding or learning reference sites, updating or listing reference memory, and creating websites, apps, pages, components, redesigns, design briefs, or implementation prompts from new or previously saved references. Honor requests for analysis or prompts only. Do not use for unrelated frontend bug fixes or page-text summaries.
+description: Analyze user-provided reference websites visually and technically, save findings to persistent reference memory, and build interfaces from that memory and the user's design brief. Use for learning or managing references, preserving project design systems, creating websites, apps, pages, components, redesigns, briefs or implementation prompts from new or saved references, and auditing or polishing reference-driven interfaces. Honor analysis-only and prompt-only requests. Do not use for unrelated frontend bug fixes or page-text summaries.
 ---
 
 # Reference Design
@@ -30,7 +30,11 @@ Read [the reference memory workflow](references/reference-memory.md) at the star
 
 ## 2. Inspect the references
 
-Read [the inspection guide](references/inspection.md). For URLs or code, also read [the implementation inspection guide](references/implementation-inspection.md). Match inspection depth to the requested scope.
+Read [the inspection guide](references/inspection.md). For URLs or code, also read [the implementation inspection guide](references/implementation-inspection.md). For automated URL capture or working-interface checks, read [the browser capture guide](references/browser-capture.md). Match inspection depth to the requested scope.
+
+- When host rules permit standalone browser execution and dependencies exist, use `scripts/capture_reference.py` to capture relevant viewports, styles, and states. Import runtime facts with `--memory-root` or the memory helper's `import-capture` command.
+- Review screenshots and relevant source before enriching a capture into an analyzed reference. A capture remains partial; the tool does not trace all JavaScript or establish original architecture.
+- If standalone execution is unavailable or the host requires its own browser, use the permitted inspection tools and record limitations. Do not bypass host rules to run the helper.
 
 ### Observe appearance and behavior
 
@@ -60,6 +64,7 @@ Read [the inspection guide](references/inspection.md). For URLs or code, also re
 - Map each selected source to the feature and mechanism being adapted. A short paragraph is sufficient for a small task.
 - Preserve user-assigned reference roles. Otherwise choose a coherent primary direction and supporting references based on the product's purpose.
 - Define semantic colors, typography hierarchy, content width/grid, spacing scale, radii, borders, shadows, layering, imagery/icons, and motion where relevant.
+- For substantial or multi-page implementation, read [the project design guide](references/project-design.md). Reuse an equivalent existing project design system, or persist master decisions, selected reference roles, and page overrides with `scripts/design_project.py`. Load resolved decisions in later tasks; reference memory and product decisions serve different purposes.
 - Translate technical findings into the target project's component, styling, and state model. Do not impose the reference site's framework.
 - Specify where grain, gradients, glass, or soft surfaces appear, their intensity, layer, and contrast. Do not add them automatically to every design.
 - Preserve explicit constraints. Adapt a dark reference's composition or typography to a requested light theme rather than importing its palette.
@@ -88,6 +93,8 @@ Read [the inspection guide](references/inspection.md). For URLs or code, also re
 ## 5. Compare, verify, and refine
 
 Read [the visual review checklist](references/visual-review.md) before finishing.
+
+- For audit, critique, or polish requests related to reference-driven work, also read [the quality review guide](references/quality-review.md). Keep audit-only work within reporting scope.
 
 - When the application can run, inspect its rendered output at approximately 1440 px desktop and 390 px mobile widths, plus the actual target device when relevant.
 - Compare against both the explicit brief and selected reference principles. Preserve differences the user intentionally requested.
