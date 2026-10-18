@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+.write-lock/
+.store-*
+.DS_Store
+Thumbs.db
+
+# Reference observations belong to the local installation.
+skills/reference-design/references/memory/

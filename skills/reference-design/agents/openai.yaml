@@ -1,0 +1,14 @@
+interface:
+  display_name: Referansla Tasarla
+  short_description: Referansları belleğe al, birikimden tasarım üret
+  default_prompt: $reference-design ile verdiğim siteleri görsel ve teknik olarak
+    inceleyip referans belleğine kaydet; site istediğimde bu bellekten yararlan.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
