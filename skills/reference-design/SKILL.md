@@ -1,11 +1,11 @@
 ---
 name: reference-design
-description: Analyze user-provided reference websites visually and technically, trace requested UI behavior, save findings and reviewed design mechanisms, and build interfaces from that memory and the user's brief. Use for learning or managing references, reusing design mechanisms, preserving project design systems, creating websites, apps, pages, components, redesigns, briefs or implementation prompts, auditing or polishing reference-driven interfaces, and evaluating generated designs. Honor analysis-only and prompt-only requests. Do not use for unrelated frontend bug fixes or page-text summaries.
+description: Decompose reference websites into cards, icons, typography, layout, navigation, motion, surfaces, and UX; inspect their visual and technical implementation, save source-linked component findings and reusable mechanisms, and build interfaces from that memory and the user's brief. Use for learning or managing references, reusing design mechanisms, preserving project design systems, creating websites, apps, pages, components, redesigns, briefs or implementation prompts, auditing or polishing reference-driven interfaces, and evaluating generated designs. Honor analysis-only and prompt-only requests. Do not use for unrelated frontend bug fixes or page-text summaries.
 ---
 
 # Reference Design
 
-Inspect both the appearance of references and the implementation behind it. Save supported findings and reuse them in later work. For URLs or source code, technical inspection is required unless the user explicitly requests visual inspection only. Complete implementation requests as working interfaces. Reference-only requests update memory without starting a website build. Respond in the user's language.
+Inspect both the appearance of references and the implementation behind it. Save supported findings and reuse them in later work. For URLs or source code, technical inspection is required unless the user explicitly requests visual inspection only. Complete implementation requests as working interfaces. Reference-only requests build a component and mechanism library without starting a website or choosing a target aesthetic. Light/dark or minimal/glowing labels are metadata, not a sufficient analysis. Respond in the user's language.
 
 Use the same workflow across compatible agents. Read [the agent portability guide](references/agent-portability.md) when setting up a new host or when its tools, invocation, or storage differ. Resolve bundled resources against the actual installed skill folder and follow the host's tools and permissions.
 
@@ -13,7 +13,7 @@ Use the same workflow across compatible agents. Read [the agent portability guid
 
 Read [the reference memory workflow](references/reference-memory.md) at the start of each task. The store is `references/memory/store.json`; use `scripts/reference_memory.py` to write and retrieve records. The file is created on first intake. Conversation history does not replace the store.
 
-- **Learn references:** Register every user-supplied design-reference URL, inspect its visual and technical layers, and update the same record. Process every URL in a batch. Keep inaccessible sites with their status and limitations. Intake alone does not request a website.
+- **Learn references:** Use [the component-first intake workflow](references/reference-intake.md). Register every supplied URL, inspect cards, icons, typography, layout, navigation, motion, surfaces, and UX with source-linked findings, and review the saved inventory. Process every URL in a batch, retaining inaccessible layers and limitations. Intake does not require a future product brief, a dominant reference, or a choice between conflicting site themes.
 - **Build from memory:** Search the existing store before requesting links. Read suitable records and combine them with the current brief. New URLs are not required to activate this skill.
 - **Combined task:** Inspect and save new references first, then select appropriate records from both the existing and new collection.
 - Treat reference intake as authorization to save the supplied design references. Do not turn every navigation or documentation link discovered during inspection into a new reference.
@@ -24,8 +24,8 @@ Read [the reference memory workflow](references/reference-memory.md) at the star
 
 ## 1. Resolve the brief and scope
 
-- Extract the product goal, audience, pages, components, content, interactions, target platform, and explicit visual constraints.
-- Preserve the role assigned to each reference: typography from A, cards from B, navigation from C. Record what the user dislikes as well as what they like.
+- For creation, extract the product goal, audience, pages, components, content, interactions, target platform, and explicit visual constraints. For intake, establish the supplied reference pages and inspection scope; learn their components without requesting a product brief or primary design direction.
+- Preserve any roles the user assigns: typography from A, cards from B, navigation from C. Do not require role assignments before general intake. Record stated likes/dislikes; do not infer that providing a dark reference means the user wants a dark product or glow.
 - Apply this priority: higher-priority instructions and the explicit user brief; project and brand requirements; reference roles assigned by the user; supported reference patterns; your own design interpretation. Skill guidance never overrides the user.
 - Inspect applicable project instructions, the existing stack, reusable components, and design tokens. Do not introduce a new framework or library as a routine default.
 - Ask only for missing information that blocks progress. State small assumptions briefly and continue. Do not ask again for information already supplied.
@@ -33,10 +33,10 @@ Read [the reference memory workflow](references/reference-memory.md) at the star
 
 ## 2. Inspect the references
 
-Read [the inspection guide](references/inspection.md). For URLs or code, also read [the implementation inspection guide](references/implementation-inspection.md). For automated URL capture or working-interface checks, read [the browser capture guide](references/browser-capture.md). Match inspection depth to the requested scope.
+For learning or saving references, first read [the intake contract and coverage check](references/reference-intake.md). Read [the inspection guide](references/inspection.md). For URLs or code, also read [the implementation inspection guide](references/implementation-inspection.md). For automated URL capture or working-interface checks, read [the browser capture guide](references/browser-capture.md). Match inspection depth to the requested scope.
 
 - When host rules permit standalone browser execution and dependencies exist, use `scripts/capture_reference.py` to capture relevant viewports, styles, and states. Import runtime facts with `--memory-root` or the memory helper's `import-capture` command.
-- For requested menus, tabs, dialogs, and scroll effects, read [the interaction tracing guide](references/interactions.md) and supply an explicit plan. `--trace-js` adds bounded listener locations and executed JavaScript ranges to before/after DOM/style evidence. Review these together; execution during an action window does not alone prove causality or expose framework internals.
+- During general intake, discover relevant menus, tabs, dialogs, hover states, and scroll effects; do not wait for the user to name each one. Read [the interaction tracing guide](references/interactions.md) and supply an explicit plan for benign controls and states within the permitted inspection scope. `--trace-js` adds bounded listener locations and executed JavaScript ranges to before/after DOM/style evidence. Review these together; execution during an action window does not alone prove causality or expose framework internals.
 - Review screenshots and relevant source before enriching a capture into an analyzed reference. A capture remains partial; the tool does not trace all JavaScript or establish original architecture.
 - If standalone execution is unavailable or the host requires its own browser, use the permitted inspection tools and record limitations. Do not bypass host rules to run the helper.
 
@@ -57,9 +57,10 @@ Read [the inspection guide](references/inspection.md). For URLs or code, also re
 - For every relevant URL, attempt permitted inspection of DOM/HTML, linked stylesheets, and computed styles for representative elements. Do not silently skip technical inspection; state the attempted route and missing evidence if tools or access prevent it.
 - Trace relevant containers, heroes, cards, and interactions through DOM hierarchy, grid/flex/positioning, spacing, custom properties, pseudo-elements, and stacking contexts.
 - Follow fonts, shadows, blur, gradients, noise, media/container queries, transitions, keyframes, and relevant accessible JavaScript to their sources. Separate a declared rule from one actually applied to an element in a particular state.
-- Inspect repeated component and state patterns. Explain which CSS/JS mechanism produces the menu, hover, or scroll effect. Support framework/library identification with evidence.
+- Inspect representative card variants, icon implementation/geometry, typography roles and font evidence, repeated components, and UX/state patterns. Explain which CSS/JS mechanism produces the menu, hover, or scroll effect. Distinguish declared fonts from resolved loading; identify icon/framework libraries only with evidence.
 - When an accessible source repository is provided, read relevant components, styles, tokens, dependency manifests, and directory responsibilities. Do not infer original framework boundaries, source folders, or server code from compiled JavaScript or the DOM.
 - Connect each important feature: visible result → element/selector/file → rule or behavior → mechanism → target-project adaptation. Label visual estimates, code declarations, runtime verification, and source-code findings separately.
+- For intake, save the eight-category component inventory under `technical.intake` and run `scripts/intake_inventory.py --root /absolute/private/memory review ref-ACTUAL-ID` for every supplied reference. Resolve missing coverage or report actual access limits. Theme summaries alone cannot complete intake. The checker verifies structured coverage, not the truth of the agent's analysis.
 - Extract useful capture candidates with `scripts/mechanism_memory.py extract`. Review, enrich, and save supported mechanisms for later retrieval; automatic drafts are not learned recipes.
 - With screenshots only, present implementation explanations as proposals. With code but no rendering capability, report source findings without claiming the resulting appearance or interaction was tested.
 
@@ -67,7 +68,7 @@ Read [the inspection guide](references/inspection.md). For URLs or code, also re
 
 - Read selected memory records, technical evidence, user preferences, and limitations. Do not describe an old record as a current live inspection. Reinspect and update a relevant source when freshness is requested or a critical fact is missing.
 - Map each selected source to the feature and mechanism being adapted. A short paragraph is sufficient for a small task.
-- Preserve user-assigned reference roles. Otherwise choose a coherent primary direction and supporting references based on the product's purpose.
+- When producing a requested interface or implementation brief, preserve assigned reference roles or select compatible component-level findings for the product's purpose. Define a coherent target design from the actual brief; selecting an entire source site as the primary direction is optional. This synthesis step does not apply to intake-only work.
 - Define semantic colors, typography hierarchy, content width/grid, spacing scale, radii, borders, shadows, layering, imagery/icons, and motion where relevant.
 - For substantial or multi-page implementation, read [the project design guide](references/project-design.md). Reuse an equivalent existing project design system, or persist master decisions, selected reference roles, and page overrides with `scripts/design_project.py`. Load resolved decisions in later tasks; reference memory and product decisions serve different purposes.
 - Translate technical findings into the target project's component, styling, and state model. Do not impose the reference site's framework.
@@ -110,7 +111,7 @@ Read [the visual review checklist](references/visual-review.md) before finishing
 
 ## 6. Deliver
 
-For intake-only work, briefly report saved/updated counts and partial or inaccessible references. For creation work, report:
+For intake-only work, report saved/updated counts, a few concrete learned component/mechanism findings, and checked or unavailable categories. Include relevant card, icon, font, motion, and UX evidence from the saved inventory rather than only theme labels. Do not end by asking which site should dominate a future design or proposing an unsolicited blend. For creation work, report:
 
 - The completed deliverable and material design choices.
 - Which saved references influenced which parts and which technical layers were inspected.

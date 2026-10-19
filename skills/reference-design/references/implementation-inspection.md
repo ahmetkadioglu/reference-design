@@ -33,7 +33,9 @@ Follow the environment's browser, session, and tool rules. Do not assume DevTool
 
 ## 3. Find the effect's real layer
 
-- Inspect font family/weight/size, leading, tracking, font-face, and actual resolved fonts when tools expose them. A declared font stack does not establish successful loading.
+- Inspect font family/weight/size, leading, tracking, font-face, and actual resolved fonts for heading/body/label/code roles when tools expose them. A declared font stack does not establish successful loading.
+- Inspect representative icons: inline SVG or sprite/use targets, viewBox, stroke/fill, size, alignment, image/font assets, accessible name, and decorative treatment. Follow actual imports or asset evidence before naming an icon library.
+- Decompose card variants into container, media/icon, text, metadata and action areas. Inspect parent layout and card states separately from the page palette.
 - Record colors, borders, radius, and shadows for the relevant element and state. Account for cascade, overrides, and resolved theme variables.
 - Determine whether a surface uses gradients, background images, SVG filters, texture assets, canvas, or CSS filters.
 - Trace pseudo-elements, opacity, blending, masks, filters, backdrop filters, and isolation.
@@ -45,7 +47,7 @@ Follow the environment's browser, session, and tool rules. Do not assume DevTool
 - Find whether hover/focus/active/open states come from pseudo-classes, classes, data/ARIA attributes, or JavaScript state.
 - Identify transition/keyframe targets, timing, delays, easing, and triggers. Verify behavior at runtime when possible; source inspection alone is not an execution test.
 - Follow trigger → state change → DOM/class/attribute update → visual result for menus, tabs, and dialogs.
-- For scroll effects, trace the relevant observer/listener/animation connection. A script filename is not proof of a mechanism.
+- During general intake, inspect relevant sections while scrolling rather than waiting for a separate motion request. For observed scroll effects, trace the observer/listener/animation connection and affected element/property. Record sticky/reveal/pinning behavior, timing, trigger conditions and reduced-motion handling when accessible. A script filename or still image is not proof of a mechanism or of animation absence.
 - Support framework/library claims with dependencies, imports, or explicit runtime evidence. Surface similarity and class names are insufficient. State architectural inference limits without repository access.
 
 ## 5. Convert findings into decisions
@@ -64,7 +66,8 @@ Distinguish the original mechanism from the target implementation. Adapt to the 
 
 ## Completion criteria
 
-- Explain the relevant DOM/layout, styling/layers, and interaction logic.
+- Explain the relevant DOM/layout, card/icon/font implementations, styling/layers, UX/state patterns, and interaction logic.
+- For intake, account for all required inventory categories; record unavailable layers instead of replacing missing analysis with light/dark style adjectives.
 - Connect important findings to concrete evidence.
 - State unavailable layers and runtime verification limits.
 - Inspect actual component/file organization when a repository is available; otherwise leave those boundaries unknown.

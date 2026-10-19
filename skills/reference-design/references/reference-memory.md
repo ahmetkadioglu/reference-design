@@ -4,6 +4,7 @@
 
 - The default store is this skill's `references/memory/store.json`. It is created on first intake. Resolve commands against the actual skill directory; examples below are relative to that directory.
 - The versioned JSON store contains all records. `search` returns short matches; `get` returns selected details. Do not load the whole store into model context for every task.
+- Each newly learned site also needs the component-level `technical.intake` inventory described in [reference-intake.md](reference-intake.md). Review it with `scripts/intake_inventory.py`; old records remain readable and should be enriched in place rather than deleted or treated as detailed analysis from their theme summary alone.
 - Reusable implementation patterns live beside it in `mechanisms.json`, managed by `scripts/mechanism_memory.py`. Read the mechanism guide when extracting or reusing them; reference intake does not automatically approve mechanism drafts.
 - Reuse a configured durable location through `REFERENCE_DESIGN_MEMORY_ROOT` or `--root /absolute/persistent/path`. Do not silently create a different store each session.
 - In ChatGPT Work, locate the existing `name: reference-design` manifest under `/root/.codex/skills/remote-skills`. The platform may use an ID-based directory name. Update that skill and memory rather than creating another copy.
@@ -31,7 +32,7 @@ Replace `ref-EXAMPLE` with an actual returned ID. Use a separate temporary `--ro
 
 1. Collect every URL the user supplies as a design reference. Preserve distinct pages and meaningful query/hash routes instead of collapsing an entire domain into one record.
 2. Register the full batch with minimal `upsert` entries, for example `[{"url":"https://example.com/"},{"url":"https://example.org/cards"}]`. These are examples, not references to save. Omitted fields preserve existing findings; new records start as `queued`.
-3. Apply visual and technical inspection to each reference, then `upsert` findings using the same URL. Save large lists in manageable durable batches and account for every supplied reference.
+3. Apply visual and technical inspection to each reference and save its cards, icons, typography, layout, navigation, motion, surfaces, and UX inventory under `technical.intake`. Then `upsert` findings using the same URL and review every record with `intake_inventory.py`. Save large lists in manageable durable batches and account for every supplied reference; a future design direction is not needed.
 4. Set status accurately: `queued` = pending; `partial` = some layers inspected; `analyzed` = scoped inspection complete with evidence; `unavailable` = never inspectable. Keep inaccessible records. If a previously analyzed site becomes inaccessible, preserve its findings and old `inspected_at`, use `partial`, and add a dated limitation for the failed attempt.
 5. Reuse the same canonical URL's record. The helper removes recognized tracking parameters while preserving meaningful queries/fragments and paths. Do not assume redirects or aliases are equivalent without evidence.
 6. Patch only changed fields. Nested objects merge; `tags`/`roles` append unique values; other arrays replace when explicitly supplied. Carry forward evidence/limitations that should remain. Earlier complete records are preserved in `history`.
@@ -47,7 +48,7 @@ Replace `ref-EXAMPLE` with an actual returned ID. Use a separate temporary `--ro
 | `domains`, `components`, `techniques` | Optional structured facets such as booking, card, and SVG noise; older stores without them remain readable |
 | `status`, `inspected_at` | Inspection status and actual inspection time as an ISO timestamp |
 | `visual` | Layout, typography, semantic colors, surfaces, texture, density, inspected viewports/states |
-| `technical` | DOM/layout, grid/flex, tokens, layers, breakpoints, JS behavior, and source architecture when accessible |
+| `technical` | Component intake inventory, DOM/layout, grid/flex, tokens, layers, breakpoints, JS behavior, and source architecture when accessible |
 | `preferences` | The user's likes/dislikes and assigned role for this source; distinguish statements from interpretation |
 | `evidence` | Objects containing `kind`, `source`, `finding`, and optional `locator` such as a selector, function, or viewport |
 | `limitations` | Unavailable code, unobserved mobile views, missing sources, or unverified behavior |

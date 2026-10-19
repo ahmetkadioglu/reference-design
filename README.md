@@ -47,6 +47,8 @@ Request analysis, a brief, or an implementation prompt explicitly when that is t
 
 ## What it inspects
 
+Reference intake learns reusable parts of each site rather than assigning it a single style. Sites with opposing light/dark palettes remain independent sources for card structures, icon treatments, typography roles, scroll mechanics, and UX patterns. Choosing a primary design direction belongs to a later creation brief.
+
 - Visual hierarchy, typography, color, spacing, surfaces, texture, and responsive composition.
 - Accessible HTML/DOM, stylesheets, computed styles, layout rules, tokens, and effect layers.
 - Relevant CSS/JavaScript interactions, animation, and state changes.
@@ -54,6 +56,8 @@ Request analysis, a brief, or an implementation prompt explicitly when that is t
 - Evidence type, source, inspection date, user preferences, and access limitations.
 
 A live site exposes delivered frontend resources. Original project architecture and server code require source access. Unsupported implementation details remain unknown or are labeled as proposals.
+
+The [component-first intake contract](skills/reference-design/references/reference-intake.md) requires an evidence-linked inventory across eight categories. After saving each reference, `intake_inventory.py review` flags missing categories, pending checks, and unsupported mechanism claims. This is a structured coverage check, not proof of inspection truth or a numerical design-quality score. Existing reference stores remain readable and can be enriched without losing history.
 
 ## Persistent memory
 

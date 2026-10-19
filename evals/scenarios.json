@@ -64,6 +64,31 @@
         "Diagnostics do not claim actual commercial-host discovery",
         "No personal reference data enters the distribution repository"
       ]
+    },
+    {
+      "id": "contrasting-reference-intake",
+      "artifacts": [
+        "tests/fixtures/reference.html",
+        "tests/fixtures/reference.css",
+        "tests/fixtures/reference.js",
+        "tests/fixtures/noise.svg",
+        "tests/fixtures/intake-dark.html"
+      ],
+      "turns": [
+        "Use the supplied reference-design skill. These local source snapshots correspond to https://reference-light.test/ and https://reference-dark.test/. Add both to reference memory for later use. Do not build a website. Inspect the supplied code and record the limits of any unavailable rendered inspection.",
+        "Use the saved collection to write a brief for a light booking homepage with blue accents. Include useful card, icon, typography, motion, and UX mechanisms when supported by the records. Deliver only the brief."
+      ],
+      "review": [
+        "Intake accounts for cards, icons, typography, layout, navigation, motion, surfaces, and UX on both sources",
+        "Card variants, inline SVG geometry, font declarations, and IntersectionObserver behavior are grounded in actual source locators",
+        "Declared code is not reported as rendered, loaded-font, or executed-animation verification",
+        "Missing icons or motion on the light source are scoped absence findings or explicit unavailable checks",
+        "No primary-site choice or future aesthetic preference is required to complete intake",
+        "The first response contains concrete component findings rather than only light/minimal and dark/glowing labels",
+        "Both inventories are persisted and reviewed without losing existing preferences",
+        "The later light product can reuse component mechanisms from the dark source without inheriting its palette",
+        "Accessibility and behavior limitations are carried into adaptation rather than copied as complete recipes"
+      ]
     }
   ]
 }

@@ -1,6 +1,6 @@
 # Reference inspection guide
 
-Scale inspection to the request. For a card, inspect that card and relevant states. For a site, inspect relevant pages and sections. Prioritize features the user explicitly identifies.
+Scale inspection to the request. For a card, inspect that card and relevant states. For general site intake, use the eight-category inventory in [reference-intake.md](reference-intake.md), covering representative variants and relevant states even when the user has not named each feature. Prioritize highlighted details without reducing the rest of the site to a theme label.
 
 ## Inspect these properties
 
@@ -40,16 +40,16 @@ Limitation: missing mobile view, unverified font/effect, unavailable code, etc.
 - An image does not prove a CSS mechanism: apparent background blur could be baked into an asset.
 - Update evidence and decisions when a new reference changes the analysis.
 
-## Synthesize sources
+## Synthesize sources for a creation brief
 
-Use a compact mapping when several references contribute:
+During intake, keep independent source/component inventories. Do not require references with different themes to compete for a primary role. When an actual target brief exists, use a compact mapping of component-level findings:
 
 | Design area | Source | Supported finding | Target adaptation |
 | --- | --- | --- | --- |
 | Typography | A | Large headings and short lines | Apply a clear hierarchy to the product's own content |
 | Cards | B | Thin outlines and soft shadows | Adapt to the requested palette and corner system |
 
-Honor assigned roles. Otherwise select a primary direction and supporting influences rather than combining every characteristic of every site.
+Honor assigned roles. Otherwise select suitable component and mechanism findings, then define a coherent target system from the brief. A whole-site primary source is optional; contrasting palettes do not prevent learning from both sources.
 
 ## Decision record
 
@@ -57,7 +57,7 @@ Resolve these before implementation; identify source measurements versus propose
 
 - Page/component scope and primary user action.
 - Required preferences and excluded visual choices.
-- Primary and supporting reference roles.
+- Selected component-level reference roles; a primary site only when useful to the actual brief.
 - Semantic palette and heading/body/supporting type hierarchy.
 - Width, grid, spacing, radius, border, shadow, and optional texture values.
 - Supported DOM/layout, CSS/layer, and interaction mechanisms; target component/style organization.
